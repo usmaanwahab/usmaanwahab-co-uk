@@ -1,0 +1,70 @@
+{% extends "base" %}
+
+{% block content %}
+<div class=".container px-4 py-4">
+  <div class="row">
+    <div class="col">
+      <div class="card" style="wdith: 6rem;">
+        <div class="card-header text-white bg-primary">
+          <h4 class="card-title">Education</h4>
+        </div>
+        <div class="card-body">
+          <p class="card-text">
+            <ul> 
+              <li> <a href="/education"> University of Glasgow </a> </li>
+            <ul>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="wdith: 6rem;">
+        <div class="card-header text-white bg-primary">
+          <h4 class="card-title">Experience</h4>
+        </div>
+        <div class="card-body">
+          <p class="card-text">
+            <ul>
+              <li> <a href="/experience"> University of Glasgow </a> </li>
+              <li> <a href="/experience"> Govan Community Project </a> </li>
+              <li> <a href="/experience"> UGRacing </a> </li>
+            </ul>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="wdith: 6rem;">
+        <div class="card-header text-white bg-primary"> 
+          <h4 class="card-title">Projects</h4>
+        </div>
+        <div class="card-body">
+          <p class="card-text">
+            <ul>
+              <li> <a href="/projects"> Website </a> </li>
+              <li> <a href="/projects"> Network Topology Crawler </a> </li>
+              <li> <a href="/projects"> Prototype Database </a> </li>
+            </ul>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+          <div class="card" style="wdith: 6rem;">
+            <div class="card-header text-white bg-primary"> 
+              <h4 class="card-title">Projects</h4>
+            </div>
+            <div class="card-body">
+              <p class="card-text">
+                <ul>
+                  <li> <a href="/spotify"> Spotify </a> </li>
+                  <li> <a href="/hevy"> Hevy </a> </li>
+                </ul>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock content %}
