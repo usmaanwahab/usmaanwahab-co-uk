@@ -9,7 +9,7 @@ use rocket_dyn_templates::{Template, context};
 use reqwest::Url;
 
 mod spotify_utils;
-use spotify_utils::{get_spotify_access_tokens, get_spotify_credentials};
+use spotify_utils::{get_spotify_access_tokens, get_spotify_credentials, get_current_track};
 
 #[get("/")]
 fn index() -> Template {
@@ -56,17 +56,20 @@ fn spotify() -> Result<Redirect, String> {
     Ok(Redirect::to(url))
 }
 
-// #[get("spotify/current")]
-// fn current() -> Result<RawText<String>, String> {
-//
-// }
+#[get("/spotify/current")]
+fn current() -> Result<RawText<String>, String> {
+    match get_current_track() {
+        Ok(body) => Ok(RawText(body)),
+        Err(e) => Err(e.to_string())
+    }
+}
 
 #[launch]
 fn rocket() -> Rocket<Build> {
     rocket::build()
         .mount(
             "/",
-            routes![index, education, experience, projects, spotify, callback],
+            routes![index, education, experience, projects, spotify, callback, current],
         )
         .attach(Template::fairing())
 }
