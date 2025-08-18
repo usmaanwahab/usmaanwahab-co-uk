@@ -8,8 +8,16 @@ use rocket_dyn_templates::{Template, context};
 
 use reqwest::Url;
 
+mod spotify_auth;
+use spotify_auth::{
+    get_spotify_access_tokens, 
+    get_spotify_credentials, 
+    get_current_track, 
+    refresh_auth
+};
+
 mod spotify_utils;
-use spotify_utils::{get_spotify_access_tokens, get_spotify_credentials, get_current_track, refresh_auth};
+use spotify_utils::*;
 
 #[get("/")]
 fn index() -> Template {
