@@ -1,4 +1,4 @@
-use std::collection::HashMap;
+use std::collections::HashMap;
 
 use std::fs;
 use std::fs::File;
@@ -7,32 +7,31 @@ use std::io::Write;
 use serde::{Serialize, Deserialize};
 use serde_json;
 
-use reqwest::blocking::client;
+use reqwest::blocking::Client;
 use reqwest::header::{HeaderMap, HeaderValue};
 
 use base64::Engine;
 use base64::engine::general_purpose;
 
+const SPOTIFY_AUTH_PATH: &str = "spotify_auth.json";
 const CONFIG_PATH: &str = "config.json";
 const REDIRECT_URI: &str = "https://usmaanwahab.co.uk/callback";
-
 const TOKEN_ENDPOINT: &str = "https://accounts.spotify.com/api/token";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SpotifyAuthCredentials {
     pub client_id: String,
     pub client_secret: String
-};
+}
 
 #[derive(Serialize, Deserialize, Debug)]
-pub SpotifyAuthResponse {
-    access_token: String,
-    token_type: String,
-    scope: Option<String>,
-    expires_in: u16,
-    refresh_token: String
-};
-
+pub struct SpotifyAuthResponse {
+    pub access_token: String,
+    pub token_type: String,
+    pub scope: Option<String>,
+    pub expires_in: u16,
+    pub refresh_token: String
+}
 
 pub fn read_spotify_credentials() -> Result<SpotifyAuthCredentials, Box<dyn std::error::Error>> {
     let json_data = fs::read_to_string(CONFIG_PATH)?;
@@ -40,9 +39,15 @@ pub fn read_spotify_credentials() -> Result<SpotifyAuthCredentials, Box<dyn std:
     Ok(spotify_credentials)
 }
 
+pub fn read_spotify_auth() -> Result<SpotifyAuthResponse, Box<dyn std::error::Error>> {
+    let json_data = fs::read_to_string(SPOTIFY_AUTH_PATH)?;
+    let spotify_auth_response: SpotifyAuthResponse = serde_json::from_str(&json_data)?;
+    Ok(spotify_auth_response)
+}
+
 pub fn request_spotify_access_token(code: &str) -> Result<(), Box<dyn std::error::Error>> {
     let spotify_credentials = match read_spotify_credentials() {
-        Ok(credentials) = credentials;
+        Ok(credentials) => credentials,
         Err(e) => {
             eprintln!("Failed to load spotify credentials: {}", e);
             return Err(e);
@@ -69,27 +74,22 @@ pub fn request_spotify_access_token(code: &str) -> Result<(), Box<dyn std::error
     let client = Client::new();
     let response = client
         .post(TOKEN_ENDPOINT)
-        .header(headers)
+        .headers(headers)
         .form(&params)
         .send()?;
 
     let body = response.text()?;
-    let json_data: SpotifyAuthResponse = serde_json::from_str(&body);
-    let formatted_json = serde_json::to_string_pretty(&data);
-    let mut file = File::create(SPOTIFY_AUTH_PATH);
-    file.write_all(json.as_bytes())?;
+    let json_data: SpotifyAuthResponse = serde_json::from_str(&body)?;
+    let formatted_json = serde_json::to_string_pretty(&json_data)?;
+    let mut file = File::create(SPOTIFY_AUTH_PATH)?;
+    file.write_all(formatted_json.as_bytes())?;
 
     Ok(())
 }
 
-pub fn read_spotify_auth() -> Result<SpotifyAuthResponse, Box<dyn std::error::Error>> {
-    let json_data = fs::read_to_string(SPOTIFY_AUTH_PATH)?;
-    let spotify_auth_response: SpotifyAuthResponse = serde_json::from_str(&json_data)?;
-    Ok(spotify_auth_response)
-}
 
 pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
-    let spotify_credentials = match get_spotify_credentials() {
+    let spotify_credentials = match read_spotify_credentials() {
         Ok(credentials) => credentials,
         Err(e) => {
             eprintln!("Failed to read spotify response: {}", e);
@@ -98,7 +98,7 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
     };
     
     let spotify_auth_response = match read_spotify_auth() {
-        Ok(spotify_auth) => spotift_auth,
+        Ok(spotify_auth) => spotify_auth,
         Err(e) => {
             eprintln!("Failed to read spotify auth data: {}", e);
             return Err(e);
@@ -109,8 +109,6 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
     params.insert("grant_type", "refresh_token");
     params.insert("refresh_token", &spotify_auth_response.refresh_token);
     
-    let mut headers = HeaderMap::new();
-
     let encoded_secret_and_id = general_purpose::STANDARD.encode(&format!(
             "{}:{}",
             spotify_credentials.client_id, spotify_credentials.client_secret
@@ -130,10 +128,13 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
         .form(&params)
         .send()?;
 
-    let body = response.text()?
-    let json = serde_json::to_string_pretty(&data)?;
+    let body = response.text()?;
+    let mut json: SpotifyAuthResponse = serde_json::from_str(&body)?;
+    json.refresh_token = spotify_auth_response.refresh_token;
+    
+    let json_str = serde_json::to_string_pretty(&json)?;
     let mut file = File::create(SPOTIFY_AUTH_PATH)?;
-    file.write_all(json.as_bytes())?;
+    file.write_all(json_str.as_bytes())?;
 
     Ok(())
 }
