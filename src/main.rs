@@ -19,13 +19,6 @@ use spotify_utils::{
     get_current_track,
 };
 
-fn format_milliseconds(ms: &i64) -> String {
-    let seconds = ms / 1000;
-    let minutes = seconds / 60;
-    let remaining_seconds = seconds % 60;
-
-    format!("{}:{}", minutes, remaining_seconds)
-}
 
 #[get("/")]
 fn index() -> Template {
@@ -44,11 +37,10 @@ fn index() -> Template {
     let artist_name = current_track_data["item"]["album"]["artists"][0]["name"].as_str().unwrap_or("unknown");
     Template::render("index", context! {
         track_name: track_name,
-        progress: format_milliseconds(&progress_ms),
-        duration: format_milliseconds(&duration_ms),
+        progress_ms: progress_ms,
+        duration_ms: duration_ms,
         image_url: image_url,
         artist_name: artist_name,
-        elapsed_percentage: progress_ms * 100 / duration_ms
     })
 }
 

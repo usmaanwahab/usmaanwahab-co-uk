@@ -113,6 +113,7 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
     let now = SystemTime::now();
 
     if now < expiry_time {
+        println!("No need to refresh token!");
         return Ok(());
     }
 
