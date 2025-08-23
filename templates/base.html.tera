@@ -80,16 +80,6 @@
     </div>
   </div>
 </body>
-<script defer>
-  document.addEventListener("DOMContentLoaded", () => {
-    const currentPath = window.location.pathname;
-
-    document.querySelectorAll(".sidebar .nav-link").forEach(link => {
-      if (link.getAttribute("href") === currentPath) {
-        link.classList.add("active");
-      }
-    });
-  });
-  {% block script %} {% endblock script %}
-</script>
+<script src="/static/base.js" defer></script>
+{% block script %} {% endblock script %}
 </html>
