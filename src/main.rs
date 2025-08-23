@@ -102,7 +102,7 @@ fn refresh() -> Result<String, String> {
 #[launch]
 fn rocket() -> Rocket<Build> {
     rocket::build()
-        .mount("/", routes![index, education, experience, projects, spotify, callback])
         .mount("/static", FileServer::from("/root/static"))
+        .mount("/", routes![index, education, experience, projects, spotify, callback])
         .attach(Template::fairing())
 }
