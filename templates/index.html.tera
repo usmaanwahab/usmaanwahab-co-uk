@@ -1,16 +1,16 @@
-{% extends "base" %} {% block head %}
-<style>
+{% extends "base" %} 
+{% block style %}
     .audio-player {
         background: white;
         border-radius: 20px;
         padding: 20px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        max-width: 300px;
+        max-width: 200px;
     }
     
     .album-art {
-        width: 200px;
-        height: 200px;
+        width: 160px;
+        height: 160px;
         border-radius: 15px;
         margin: 0 auto 20px;
         overflow: hidden;
@@ -49,7 +49,7 @@
     .progress {
         height: 100%;
         background: linear-gradient(90deg, #1db954, #1ed760);
-        width: {{elapsed_percentage}}%;
+        width: 0%;
         transition: width 0.1s linear;
     }
     
@@ -88,114 +88,73 @@
             height: 20px;
         }
     }
-</style>
-{% endblock head %} {% block content %}
-<div class="container-fluid px-3 py-3 gx-3 gy-3">
-    <div class="row row-cols-3 gx-3 gy-3">
-        <div class="col">
-            <div class="card">
-                <div class="card-header text-white bg-primary">
-                    <h4 class="card-title">Education</h4>
-                </div>
-                <div class="card-body">
-                    <div class="card-text">
-                        <ul>
-                            <li> <a href="/education"> University of Glasgow </a> </li>
-                        <ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-header text-white bg-primary">
-                    <h4 class="card-title">Experience</h4>
-                </div>
-                <div class="card-body">
-                    <div class="card-text">
-                        <ul>
-                            <li> <a href="/experience#University-of-Glasgow"> University of Glasgow </a> </li>
-                            <li> <a href="/experience#Govan-Community-Project"> Govan Community Project </a> </li>
-                            <li> <a href="/experience#UGRacing"> UGRacing </a> </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-header text-white bg-primary">
-                    <h4 class="card-title">Projects</h4>
-                </div>
-                <div class="card-body">
-                    <div class="card-text">
-                        <ul>
-                            <li> <a href="/projects"> Website </a> </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-header text-white bg-primary">
-                    <h4 class="card-title">Personal</h4>
-                </div>
-                <div class="card-body">
-                    <div class="card-text">
-                        <ul>
-                            <li> <a href="/spotify"> Spotify </a> </li>
-                            <li> <a href="/hevy"> Hevy </a> </li>
-                            <li> <a href="/letterboxd"> Letterboxd </a> </li>
-                            <li> <a href="/books"> Books </a> </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-header text-white bg-primary">
-                    <h4 class="card-title">Personal</h4>
-                </div>
+{% endblock style %}
 
-                <div class="card-body" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
-                    <div class="audio-player">
-                        <div class="album-art">
-                            <img src="{{image_url}}" alt="Album Art" style="width: 100%; height: 100%; object-fit: cover;">
-                        </div>
+{% block content %}
+<div class="audio-player">
+    <div class="album-art">
+        <img src="{{image_url}}" alt="Album Art" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
 
-                        <div class="visualizer">
-                            <div class="bar" style="animation-delay: -0.4s"></div>
-                            <div class="bar" style="animation-delay: -0.2s"></div>
-                            <div class="bar" style="animation-delay: -0.6s"></div>
-                            <div class="bar" style="animation-delay: -0.1s"></div>
-                            <div class="bar" style="animation-delay: -0.3s"></div>
-                            <div class="bar" style="animation-delay: -0.5s"></div>
-                            <div class="bar" style="animation-delay: -0.2s"></div>
-                            <div class="bar" style="animation-delay: -0.4s"></div>
-                        </div>
+    <div class="visualizer">
+        <div class="bar" style="animation-delay: -0.4s"></div>
+        <div class="bar" style="animation-delay: -0.2s"></div>
+        <div class="bar" style="animation-delay: -0.6s"></div>
+        <div class="bar" style="animation-delay: -0.1s"></div>
+        <div class="bar" style="animation-delay: -0.3s"></div>
+        <div class="bar" style="animation-delay: -0.5s"></div>
+        <div class="bar" style="animation-delay: -0.2s"></div>
+        <div class="bar" style="animation-delay: -0.4s"></div>
+    </div>
 
-                        <div class="track-info">
-                            <div class="track-title">{{track_name}}</div>
-                            <div class="track-artist">{{artist_name}}</div>
-                        </div>
+    <div class="track-info">
+        <div class="track-title">{{track_name}}</div>
+        <div class="track-artist">{{artist_name}}</div>
+    </div>
 
-                        <div class="progress-container">
-                            <div class="progress-bar">
-                                <div class="progress"></div>
-                            </div>
-                            <div class="time-info">
-                                <span>{{progress}}</span>
-                                <span>{{duration}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
         </div>
-</div>
-</div>
-</div>
+        <div class="time-info">
+            <span id="progress-display"></span>
+            <span id="duration-display"></span>
+        </div>
+    </div>
 </div>
 {% endblock content %}
+
+{% block script %}
+
+function msToTimeString(s) {
+  var ms = s % 1000;
+  s = (s - ms) / 1000;
+  var secs = s % 60;
+  s = (s - secs) / 60;
+  var mins = s % 60
+
+  var paddedSecs = secs.toString().padStart(2, '0');
+  var paddedMins = mins.toString().padStart(2, '0');
+
+  return paddedMins + ':' + paddedSecs;
+}
+
+let progress_ms = Number("{{progress_ms}}");
+let duration_ms = Number("{{duration_ms}}");
+
+const progressElement = document.getElementById("progress-display");
+const durationElement = document.getElementById("duration-display");
+const progressBarElement = document.getElementById("progress");
+
+progressElement.textContent = msToTimeString(progress_ms);
+durationElement.textContent = msToTimeString(duration_ms);
+progressBarElement.style.width = `${(progress_ms / duration_ms) * 100}%`;
+
+setInterval(() => {
+  if (progress_ms < duration_ms) {
+      progress_ms += 1000;
+      progressElement.textContent = msToTimeString(progress_ms);
+      progressBarElement.style.width = `${(progress_ms / duration_ms) * 100}%`;
+    }
+}, 1000);
+{% endblock script %}
