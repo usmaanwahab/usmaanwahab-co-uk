@@ -4,6 +4,7 @@ extern crate rocket;
 use rocket::response::Redirect;
 use rocket::{Build, Rocket};
 use rocket_dyn_templates::{Template, context};
+use rocket::fs::{FileServer};
 
 use reqwest::Url;
 
@@ -30,11 +31,11 @@ fn index() -> Template {
         Ok(body) => body,
         Err(e) => panic!{"{:?}", e}
     };
-    let track_name = current_track_data["item"]["name"].as_str().unwrap_or("unknown");
+    let track_name = current_track_data["item"]["name"].as_str().unwrap_or("Nothing to see here...");
     let progress_ms = current_track_data["progress_ms"].as_i64().unwrap_or(-1);
     let duration_ms = current_track_data["item"]["duration_ms"].as_i64().unwrap_or(-1);
-    let image_url = current_track_data["item"]["album"]["images"][0]["url"].as_str().unwrap_or("unknown");
-    let artist_name = current_track_data["item"]["album"]["artists"][0]["name"].as_str().unwrap_or("unknown");
+    let image_url = current_track_data["item"]["album"]["images"][0]["url"].as_str().unwrap_or("");
+    let artist_name = current_track_data["item"]["album"]["artists"][0]["name"].as_str().unwrap_or("");
     Template::render("index", context! {
         track_name: track_name,
         progress_ms: progress_ms,
@@ -101,9 +102,7 @@ fn refresh() -> Result<String, String> {
 #[launch]
 fn rocket() -> Rocket<Build> {
     rocket::build()
-        .mount(
-            "/",
-            routes![index, education, experience, projects, spotify, callback],
-        )
+        .mount("/", routes![index, education, experience, projects, spotify, callback])
+        .mount("/static", FileServer::from("/root/static"))
         .attach(Template::fairing())
 }
