@@ -1,9 +1,21 @@
 #! /bin/bash
 
-cargo build --release
+build=true
+
+while getopts "s" flag; do
+  case "$flag" in
+  s) build=false ;; # static only
+  esac
+done
+
+if [[ $build == true ]]; then
+  cargo build --release
+fi
 
 cd ..
-scp usmaanwahab-co-uk/target/release/usmaanwahab-co-uk webserver:/root/
+if [[ $build == true ]]; then
+  scp usmaanwahab-co-uk/target/release/usmaanwahab-co-uk webserver:/root/
+fi
 scp -r usmaanwahab-co-uk/templates/ webserver:/root/
 scp -r usmaanwahab-co-uk/static/ webserver:/root/
 ssh -t webserver 'sleep 1 && export RUST_BACKTRACE=1 && ./usmaanwahab-co-uk'
