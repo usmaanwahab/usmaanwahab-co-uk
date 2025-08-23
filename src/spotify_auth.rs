@@ -4,6 +4,7 @@ use std::fs;
 use std::fs::File;
 use std::io::Write;
 
+use std::time::{Duration, SystemTime};
 use serde::{Serialize, Deserialize};
 use serde_json;
 
@@ -30,7 +31,7 @@ pub struct SpotifyAuthResponse {
     pub token_type: String,
     pub scope: Option<String>,
     pub expires_in: u16,
-    pub refresh_token: String
+    pub refresh_token: Option<String>
 }
 
 pub fn read_spotify_credentials() -> Result<SpotifyAuthCredentials, Box<dyn std::error::Error>> {
@@ -105,9 +106,24 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
         }
     };
 
+    // Don't refresh is token is still valid
+    let metadata = fs::metadata(SPOTIFY_AUTH_PATH)?;
+    let last_refresh = metadata.modified()?;
+    let expiry_time = last_refresh + Duration::from_secs(spotify_auth_response.expires_in as u64);
+    let now = SystemTime::now();
+
+    if now < expiry_time {
+        return Ok(());
+    }
+
+    let refresh_token = match spotify_auth_response.refresh_token {
+        Some(t) => t,
+        _ => panic!("Could not read old refresh_token - This should not be possible."),
+    };
+    
     let mut params = HashMap::new();
     params.insert("grant_type", "refresh_token");
-    params.insert("refresh_token", &spotify_auth_response.refresh_token);
+    params.insert("refresh_token", &refresh_token);
     
     let encoded_secret_and_id = general_purpose::STANDARD.encode(&format!(
             "{}:{}",
@@ -130,7 +146,7 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
 
     let body = response.text()?;
     let mut json: SpotifyAuthResponse = serde_json::from_str(&body)?;
-    json.refresh_token = spotify_auth_response.refresh_token;
+    json.refresh_token = Some(refresh_token);
     
     let json_str = serde_json::to_string_pretty(&json)?;
     let mut file = File::create(SPOTIFY_AUTH_PATH)?;

@@ -24,6 +24,11 @@ pub fn get_current_track() -> Result<serde_json::Value, Box<dyn std::error::Erro
         .get("https://api.spotify.com/v1/me/player/currently-playing")
         .headers(headers)
         .send()?;
+    
+    // Spotify is not playing
+    if response.status() == 204 {
+        return Ok(serde_json::from_str("{}").unwrap());
+    }
 
     let body = response.text()?;
     let json: serde_json::Value = serde_json::from_str(&body)?;

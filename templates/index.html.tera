@@ -1,204 +1,201 @@
-{% extends "base" %}
-
-{% block head %}
+{% extends "base" %} {% block head %}
 <style>
-.audio-player {
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.album-art {
-    width: 200px;
-    height: 200px;
-    border-radius: 15px;
-    margin: 0 auto 20px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.track-info {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.track-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.track-artist {
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.progress-container {
-    margin-bottom: 20px;
-}
-
-.progress-bar {
-    height: 5px;
-    background: #e9ecef;
-    border-radius: 5px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-}
-
-.progress {
-    height: 100%;
-    background: linear-gradient(90deg, #1db954, #1ed760);
-    width: {{elapsed_percentage}}%;
-    transition: width 0.1s linear;
-}
-
-.time-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: #666;
-    margin-top: 5px;
-}
-
-.visualizer {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 30px;
-    gap: 3px;
-    margin: 20px 0;
-}
-
-.bar {
-    width: 3px;
-    background: #1db954;
-    border-radius: 3px;
-    animation: bounce 1s infinite;
-}
-
-@keyframes bounce {
-
-    0%,
-    100% {
+    .audio-player {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 300px;
+    }
+    
+    .album-art {
+        width: 200px;
+        height: 200px;
+        border-radius: 15px;
+        margin: 0 auto 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .track-info {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .track-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .track-artist {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .progress-container {
+        margin-bottom: 20px;
+    }
+    
+    .progress-bar {
         height: 5px;
+        background: #e9ecef;
+        border-radius: 5px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
     }
-
-    50% {
-        height: 20px;
+    
+    .progress {
+        height: 100%;
+        background: linear-gradient(90deg, #1db954, #1ed760);
+        width: {{elapsed_percentage}}%;
+        transition: width 0.1s linear;
     }
-}
+    
+    .time-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 5px;
+    }
+    
+    .visualizer {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        height: 30px;
+        gap: 3px;
+        margin: 20px 0;
+    }
+    
+    .bar {
+        width: 3px;
+        background: #1db954;
+        border-radius: 3px;
+        animation: bounce 1s infinite;
+    }
+    
+    @keyframes bounce {
+    
+        0%,
+        100% {
+            height: 5px;
+        }
+    
+        50% {
+            height: 20px;
+        }
+    }
 </style>
-{% endblock head %}
-
-{% block content %}
-<div class=".container px-4 py-4">
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <div class="card-header text-white bg-primary">
-          <h4 class="card-title">Education</h4>
-        </div>
-        <div class="card-body">
-          <p class="card-text">
-            <ul> 
-              <li> <a href="/education"> University of Glasgow </a> </li>
-            <ul>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card">
-        <div class="card-header text-white bg-primary">
-          <h4 class="card-title">Experience</h4>
-        </div>
-        <div class="card-body">
-          <p class="card-text">
-            <ul>
-              <li> <a href="/experience#University-of-Glasgow"> University of Glasgow </a> </li>
-              <li> <a href="/experience#Govan-Community-Project"> Govan Community Project </a> </li>
-              <li> <a href="/experience#UGRacing"> UGRacing </a> </li>
-            </ul>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card">
-        <div class="card-header text-white bg-primary"> 
-          <h4 class="card-title">Projects</h4>
-        </div>
-        <div class="card-body">
-          <p class="card-text">
-            <ul>
-              <li> <a href="/projects"> Website </a> </li>
-            </ul>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-          <div class="card">
-            <div class="card-header text-white bg-primary"> 
-              <h4 class="card-title">Personal</h4>
+{% endblock head %} {% block content %}
+<div class="container-fluid px-3 py-3 gx-3 gy-3">
+    <div class="row row-cols-3 gx-3 gy-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header text-white bg-primary">
+                    <h4 class="card-title">Education</h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <ul>
+                            <li> <a href="/education"> University of Glasgow </a> </li>
+                        <ul>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-              <p class="card-text">
-                <ul>
-                  <li> <a href="/spotify"> Spotify </a> </li>
-                  <li> <a href="/hevy"> Hevy </a> </li>
-                  <li> <a href="/letterboxd"> Letterboxd </a> </li>
-                  <li> <a href="/books"> Books </a> </li>
-                </ul>
-              </p>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  <div class ="row">
-    <div class="col">
-      <div class = "card", style="wdith: 6rem;">
-        <div class="audio-player">
-          <div class="album-art">
-            <img src="{{image_url}}" alt="Album Art" style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-
-          <div class="visualizer">
-            <div class="bar" style="animation-delay: -0.4s"></div>
-            <div class="bar" style="animation-delay: -0.2s"></div>
-            <div class="bar" style="animation-delay: -0.6s"></div>
-            <div class="bar" style="animation-delay: -0.1s"></div>
-            <div class="bar" style="animation-delay: -0.3s"></div>
-            <div class="bar" style="animation-delay: -0.5s"></div>
-            <div class="bar" style="animation-delay: -0.2s"></div>
-            <div class="bar" style="animation-delay: -0.4s"></div>
-          </div>
-
-          <div class="track-info">
-            <div class="track-title">{{track_name}}</div>
-            <div class="track-artist">{{artist_name}}</div>
-          </div>
-
-          <div class="progress-container">
-            <div class="progress-bar">
-              <div class="progress"></div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header text-white bg-primary">
+                    <h4 class="card-title">Experience</h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <ul>
+                            <li> <a href="/experience#University-of-Glasgow"> University of Glasgow </a> </li>
+                            <li> <a href="/experience#Govan-Community-Project"> Govan Community Project </a> </li>
+                            <li> <a href="/experience#UGRacing"> UGRacing </a> </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="time-info">
-              <span>{{progress}}</span>
-              <span>{{duration}}</span>
-            </div>
-          </div>
-          </div>
         </div>
-      </div>
-    </div>
-    <div class="col"></div>
-    <div class="col"></div>
-  </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header text-white bg-primary">
+                    <h4 class="card-title">Projects</h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <ul>
+                            <li> <a href="/projects"> Website </a> </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header text-white bg-primary">
+                    <h4 class="card-title">Personal</h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <ul>
+                            <li> <a href="/spotify"> Spotify </a> </li>
+                            <li> <a href="/hevy"> Hevy </a> </li>
+                            <li> <a href="/letterboxd"> Letterboxd </a> </li>
+                            <li> <a href="/books"> Books </a> </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header text-white bg-primary">
+                    <h4 class="card-title">Personal</h4>
+                </div>
+
+                <div class="card-body" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+                    <div class="audio-player">
+                        <div class="album-art">
+                            <img src="{{image_url}}" alt="Album Art" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+
+                        <div class="visualizer">
+                            <div class="bar" style="animation-delay: -0.4s"></div>
+                            <div class="bar" style="animation-delay: -0.2s"></div>
+                            <div class="bar" style="animation-delay: -0.6s"></div>
+                            <div class="bar" style="animation-delay: -0.1s"></div>
+                            <div class="bar" style="animation-delay: -0.3s"></div>
+                            <div class="bar" style="animation-delay: -0.5s"></div>
+                            <div class="bar" style="animation-delay: -0.2s"></div>
+                            <div class="bar" style="animation-delay: -0.4s"></div>
+                        </div>
+
+                        <div class="track-info">
+                            <div class="track-title">{{track_name}}</div>
+                            <div class="track-artist">{{artist_name}}</div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress"></div>
+                            </div>
+                            <div class="time-info">
+                                <span>{{progress}}</span>
+                                <span>{{duration}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+</div>
 </div>
 {% endblock content %}

@@ -2,7 +2,6 @@
 extern crate rocket;
 
 use rocket::response::Redirect;
-use rocket::response::content::RawText;
 use rocket::{Build, Rocket};
 use rocket_dyn_templates::{Template, context};
 
@@ -30,10 +29,13 @@ fn format_milliseconds(ms: &i64) -> String {
 
 #[get("/")]
 fn index() -> Template {
-    refresh_spotify_auth();
+    match refresh_spotify_auth() {
+        Ok(()) => println!("refreshed token"),
+        Err(e) => println!("Error: {}", e.to_string())
+    };
     let current_track_data = match get_current_track() {
         Ok(body) => body,
-        Err(e) => panic!{"{}", e.to_string()}
+        Err(e) => panic!{"{:?}", e}
     };
     let track_name = current_track_data["item"]["name"].as_str().unwrap_or("unknown");
     let progress_ms = current_track_data["progress_ms"].as_i64().unwrap_or(-1);
