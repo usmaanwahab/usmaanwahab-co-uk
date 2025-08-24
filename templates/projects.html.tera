@@ -1,5 +1,46 @@
 {% extends "base" %}
 
 {% block content %}
+<div class="col-md-8">
+  <article class="mb-4 p-4 bg-white shadow-sm rounded">
+    <h2 class="fw-bold">usmaanwahab.co.uk</h2>
+    <small class="text-muted">Published: Aug 2025</small>
+     
+    <h4 class="fw-bold"> Motivation </h4>
+    <p class="mt-3">
+      The initial motivation was to learn some rust while also using it to showcase my skills.
+    </p>
 
+    <h4 class="fw-bold"> Initial Design </h4>
+    <p class="mt-3">
+      Intially I was going to configure automatic deployment through Docker and Gitlab with my cheap $4 Digital Ocean droplet acting as the runner. However, I immediately faced the limitations of the droplets hardware specifications.
+      Turns out (not very surpisingly) Rust has a very expensive and memory intensive build process. This was further worsened by Docker also needing its own memory during build. So the build process would always exhaust the droplet's resources.
+      Resulting in it having to use SWAP memory, this forced me to restart the droplet. My intial Dockerfile used Debian for ease since it normally comes pre-packaged with many dependencies. However due to memory exhaustion I switched to
+      Alpine and installed all the missing packages and dependencies. This also didn't work, I did even increase the memory on the droplet but I wasn't particulalry keen on paying more than I already was so when the hardware upgrade didn't
+      solve the problem I scrapped the idea of building on the droplet all together and built locally, copying the binary and required files to the droplet.
+    </p>
+    <pre><code>
+      #! /bin/bash
+
+      build=true
+
+      while getopts "s" flag; do
+        case "$flag" in
+        s) build=false ;; # static only
+        esac
+      done
+
+      if [[ $build == true ]]; then
+        cargo build --release
+      fi
+
+      cd ..
+      if [[ $build == true ]]; then
+        scp usmaanwahab-co-uk/target/release/usmaanwahab-co-uk webserver:/root/
+      fi
+      scp -r usmaanwahab-co-uk/templates/ webserver:/root/
+      scp -r usmaanwahab-co-uk/static/ webserver:/root/
+      ssh -t webserver 'sleep 1 && export RUST_BACKTRACE=1 && ./usmaanwahab-co-uk' 
+    </pre></code>
+</div>
 {% endblock content %}
