@@ -13,12 +13,13 @@ mod spotify_auth;
 use spotify_auth::{
     request_spotify_access_token, 
     refresh_spotify_auth,
-    read_spotify_credentials
+    read_spotify_credentials, 
 };
 
 mod spotify_utils;
 use spotify_utils::{
     get_current_track,
+    get_top_items
 };
 
 
@@ -94,7 +95,7 @@ fn refresh() -> Result<String, String> {
 
 #[get("/spotify/currently-playing")]
 fn currently_playing_widget() -> Template {
-   match refresh_spotify_auth() {
+    match refresh_spotify_auth() {
         Ok(()) => println!("refreshed token"),
         Err(e) => println!("Error: {}", e.to_string())
     };
@@ -115,6 +116,22 @@ fn currently_playing_widget() -> Template {
         image_url: image_url,
         artist_name: artist_name,
     })
+}
+
+#[get("/spotify/top/<type>/<term>/")]
+fn top_artists(type: &str, term: &str) -> Result<Template, RawHTML<String>> {
+    match refresh_spotify_auth() {
+        Ok(()) => println!("refreshed token"),
+        Err(e) => println!("Error: {}", e.to_string())
+    };
+
+    let current_track_data = match get_top_items() {
+        Ok(body) => body,
+        Err(e) => panic!{"{:?}", e}
+    };
+
+
+    
 }
 
 #[launch]
