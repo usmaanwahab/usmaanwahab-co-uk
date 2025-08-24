@@ -1,0 +1,41 @@
+{% block head %}
+<link rel="stylesheet" href="/static/audio-player.css">
+{% endblock head%}
+<div class="audio-player">
+    <div style="text-align: center;">
+      <i class="bi bi-spotify fs-1" style="color: #1db954;"></i>
+    </div>
+    <div class="album-art">
+        <img src="{{image_url}}" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+
+    <div class="visualizer">
+        <div class="bar" style="animation-delay: -0.4s"></div>
+        <div class="bar" style="animation-delay: -0.2s"></div>
+        <div class="bar" style="animation-delay: -0.6s"></div>
+        <div class="bar" style="animation-delay: -0.1s"></div>
+        <div class="bar" style="animation-delay: -0.3s"></div>
+        <div class="bar" style="animation-delay: -0.5s"></div>
+        <div class="bar" style="animation-delay: -0.2s"></div>
+        <div class="bar" style="animation-delay: -0.4s"></div>
+    </div>
+
+    <div class="track-info">
+        <div class="track-title">{{track_name}}</div>
+        <div class="track-artist">{{artist_name}}</div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="time-info" id="time-info" data-progress={{progress_ms}} data-duration={{duration_ms}}>
+            <span id="progress-display"></span>
+            <span id="duration-display"></span>
+        </div>
+    </div>
+</div>
+
+{% block script %}
+<script src="/static/audio-player.js" defer></script>
+{% endblock script %}
