@@ -23,26 +23,7 @@ use spotify_utils::{
 
 #[get("/")]
 fn index() -> Template {
-    match refresh_spotify_auth() {
-        Ok(()) => println!("refreshed token"),
-        Err(e) => println!("Error: {}", e.to_string())
-    };
-    let current_track_data = match get_current_track() {
-        Ok(body) => body,
-        Err(e) => panic!{"{:?}", e}
-    };
-    let track_name = current_track_data["item"]["name"].as_str().unwrap_or("Nothing to see here...");
-    let progress_ms = current_track_data["progress_ms"].as_i64().unwrap_or(-1);
-    let duration_ms = current_track_data["item"]["duration_ms"].as_i64().unwrap_or(-1);
-    let image_url = current_track_data["item"]["album"]["images"][0]["url"].as_str().unwrap_or("");
-    let artist_name = current_track_data["item"]["album"]["artists"][0]["name"].as_str().unwrap_or("");
-    Template::render("index", context! {
-        track_name: track_name,
-        progress_ms: progress_ms,
-        duration_ms: duration_ms,
-        image_url: image_url,
-        artist_name: artist_name,
-    })
+       Template::render("index", context!{})
 }
 
 #[get("/education")]
@@ -78,11 +59,10 @@ fn spotify() -> Result<Redirect, String> {
         }
     };
 
-
     let params = [
         ("response_type", "code"),
         ("client_id", spotify_credentials.client_id.as_str()),
-        ("scope", "user-read-currently-playing"),
+        ("scope", "user-read-currently-playing user-top-read"),
         ("redirect_uri", "https://usmaanwahab.co.uk/callback"),
     ];
 
@@ -91,6 +71,7 @@ fn spotify() -> Result<Redirect, String> {
         .to_string();
     Ok(Redirect::to(url))
 }
+
 #[get("/spotify/refresh")]
 fn refresh() -> Result<String, String> {
     match refresh_spotify_auth() {
@@ -99,10 +80,35 @@ fn refresh() -> Result<String, String> {
     }
 }
 
+#[get("/spotify/currently-playing")]
+fn currently_playing_widget() -> Template {
+   match refresh_spotify_auth() {
+        Ok(()) => println!("refreshed token"),
+        Err(e) => println!("Error: {}", e.to_string())
+    };
+    let current_track_data = match get_current_track() {
+        Ok(body) => body,
+        Err(e) => panic!{"{:?}", e}
+    };
+    let track_name = current_track_data["item"]["name"].as_str().unwrap_or("Nothing playing...");
+    let progress_ms = current_track_data["progress_ms"].as_i64().unwrap_or(-1);
+    let duration_ms = current_track_data["item"]["duration_ms"].as_i64().unwrap_or(-1);
+    let image_url = current_track_data["item"]["album"]["images"][0]["url"].as_str().unwrap_or("/static/pause.jpg");
+    let artist_name = current_track_data["item"]["album"]["artists"][0]["name"].as_str().unwrap_or("");
+
+    Template::render("audio-player", context! {
+        track_name: track_name,
+        progress_ms: progress_ms,
+        duration_ms: duration_ms,
+        image_url: image_url,
+        artist_name: artist_name,
+    })
+}
+
 #[launch]
 fn rocket() -> Rocket<Build> {
     rocket::build()
         .mount("/static", FileServer::from("/root/static"))
-        .mount("/", routes![index, education, experience, projects, spotify, callback])
+        .mount("/", routes![index, education, experience, projects, spotify, callback, currently_playing_widget])
         .attach(Template::fairing())
 }
