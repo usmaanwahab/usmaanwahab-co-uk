@@ -1,46 +1,54 @@
+
 {% extends "base" %}
 
 {% block content %}
-<div class="col-md-8">
-  <article class="mb-4 p-4 bg-white shadow-sm rounded">
-    <h2 class="fw-bold">usmaanwahab.co.uk</h2>
-    <small class="text-muted">Published: Aug 2025</small>
-     
-    <h4 class="fw-bold"> Motivation </h4>
-    <p class="mt-3">
-      The initial motivation was to learn some rust while also using it to showcase my skills.
+<article class="mb-4 p-4 bg-white shadow-sm rounded">
+  <header class="mb-3">
+    <h2 class="fw-bold mb-1">usmaanwahab.co.uk</h2>
+    <p class="text-muted small">Published: Aug 2025</p>
+  </header>
+
+  <section class="mb-4">
+    <h4 class="fw-bold">Motivation</h4>
+    <p class="mt-2">
+      The initial motivation was to learn some Rust while also using it to showcase my skills.
+    </p>
+  </section>
+
+  <section class="mb-4">
+    <h4 class="fw-bold">Setup</h4>
+    <p class="mt-2">
+      The site uses <a href="https://rocket.rs"><i class="bi bi-rocket-takeoff-fill"></i> Rocket.rs</a> for the backend logic. Through Rocket.r, we can render templates using the 
+      <a href="https://github.com/Keats/tera"><i class="bi bi-github"></i> Tera </a> template engine. Tera allows us to include variables,
+      expressions, conditional rendering that happens dynamically on a per request basis. Tera can also enable us to break up our HTML into many modular templates.
+      
+      In addition, the UI is created using <a href="https://getbootstrap.com/"><i class="bi bi-bootstrap-fill"></i> Bootstrap 5</a> which comes with many pre-made componenets and a large online library of free to use componenets. This greatly simplifies
+      UI development. There is also a sprinkle of custom JavaScript and CSS spread about to get things just right.
+    </p>
+  </section>
+  <section class="mb-4">
+    <h4 class="fw-bold">Docker <i class="bi bi-emoji-frown"></i></h4>
+    <p class="mt-2">
+      Originally the intent was to create a Dockerfile, containerise the application and automate deployment on a production branch update. However, there were limitations on the Digital Ocean
+      droplet used, as it was the cheapest with only 512MB of memory. This made it impractical to build the rust project on the droplet, and I was not keen on spending six-fold my initial plan.
+      As a 2GB droplet still came to a grinding halt when building what was a completely empty boilerplate project.
+
+      <br><br>
+
+      Why is building a project in rust so costly? Rust projects tend to have many dependencies as Rust follows a philosophy where modules tend to be smaller, and more concise. However, after
+      the first build dependencies are cached, making subsequent builds significantly faster. For example, when testing the this website, the build process will take only 2-3 seconds.
+    
+      <br><br>
+      Aside - I was fiddling about with the caching in Docker but doing so felt conflicting as caching rust build dependencies using volumes felt a little counter-productive, as Docker is supposed to
+      allows us to have a standard reproducable environment but by caching rust dependencies we pollute this environment, especially if your team uses a several computer architectures.
+      This can lead to different behavior across machines, even if everyone's running the exact same commit.
     </p>
 
-    <h4 class="fw-bold"> Initial Design </h4>
-    <p class="mt-3">
-      Intially I was going to configure automatic deployment through Docker and Gitlab with my cheap $4 Digital Ocean droplet acting as the runner. However, I immediately faced the limitations of the droplets hardware specifications.
-      Turns out (not very surpisingly) Rust has a very expensive and memory intensive build process. This was further worsened by Docker also needing its own memory during build. So the build process would always exhaust the droplet's resources.
-      Resulting in it having to use SWAP memory, this forced me to restart the droplet. My intial Dockerfile used Debian for ease since it normally comes pre-packaged with many dependencies. However due to memory exhaustion I switched to
-      Alpine and installed all the missing packages and dependencies. This also didn't work, I did even increase the memory on the droplet but I wasn't particulalry keen on paying more than I already was so when the hardware upgrade didn't
-      solve the problem I scrapped the idea of building on the droplet all together and built locally, copying the binary and required files to the droplet.
-    </p>
-    <pre><code>
-      #! /bin/bash
-
-      build=true
-
-      while getopts "s" flag; do
-        case "$flag" in
-        s) build=false ;; # static only
-        esac
-      done
-
-      if [[ $build == true ]]; then
-        cargo build --release
-      fi
-
-      cd ..
-      if [[ $build == true ]]; then
-        scp usmaanwahab-co-uk/target/release/usmaanwahab-co-uk webserver:/root/
-      fi
-      scp -r usmaanwahab-co-uk/templates/ webserver:/root/
-      scp -r usmaanwahab-co-uk/static/ webserver:/root/
-      ssh -t webserver 'sleep 1 && export RUST_BACKTRACE=1 && ./usmaanwahab-co-uk' 
-    </pre></code>
-</div>
+  </section>
+  <section>
+    <h5 class="fw-bold">deploy.sh</h5>
+    <pre class="bg-light p-3 rounded"><code>{{ deploy_file_content }}</code></pre>
+  </section>
+</article>
 {% endblock content %}
+

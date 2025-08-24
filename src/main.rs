@@ -7,6 +7,7 @@ use rocket_dyn_templates::{Template, context};
 use rocket::fs::{FileServer};
 
 use reqwest::Url;
+use reqwest::blocking::Client;
 
 mod spotify_auth;
 use spotify_auth::{
@@ -38,7 +39,18 @@ fn experience() -> Template {
 
 #[get("/projects")]
 fn projects() -> Template {
-    Template::render("projects", context! {})
+    let client = Client::new();
+    let response = client
+        .get("https://raw.githubusercontent.com/usmaanwahab/usmaanwahab-co-uk/refs/heads/main/deploy.sh")
+        .send();
+    let body = match response {
+        Ok(r) => match r.text() {
+            Ok(text) => text,
+            Err(e) => format!("Failed to load GitHub file: {}", e)
+        },
+        Err(e) => format!("Request failed: {}", e) 
+    };
+    Template::render("projects", context! {deploy_file_content: body})
 }
 
 #[get("/callback?<code>")]
