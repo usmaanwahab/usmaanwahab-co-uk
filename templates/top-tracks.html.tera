@@ -2,6 +2,20 @@
 
 {% block content %}
 
-{{ data }}
-
+<div class="row">
+{% for track in data.items %}
+<div class="col-sm-2 mb-2">
+  <a href={{ track.href }} class="text-decoration-none text-reset">
+  <div class="card p-3 justify-content-center align-items-center text-center">
+    <img src="{{ track.album.images.0.url }}" width="160" height="160">
+    <div class="card-body">
+      <h6 class="badge bg-primary m-2 p-2 rounded-circle">{{ loop.index }}<h6>
+      <p>{{ track.name }}</p>
+      <p> </p>
+    </div>
+  </div>
+  </a>
+</div>
+{% endfor %}
+</div>
 {% endblock content %}

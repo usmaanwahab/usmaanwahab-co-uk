@@ -145,7 +145,7 @@ fn top_tracks(term: String, limit: Option<u16>, offset: Option<u16>) -> Result<T
     };
     
     Ok(Template::render("top-tracks", context!{
-        data: top_tracks.to_string()
+        data: top_tracks
     }))
 }
 
@@ -170,7 +170,7 @@ fn top_artists(term: String, limit: Option<u16>, offset: Option<u16> ) -> Result
     };
     
     Ok(Template::render("top-tracks", context!{
-        data: top_tracks.to_string()
+        data: top_tracks
     }))
 }
 
