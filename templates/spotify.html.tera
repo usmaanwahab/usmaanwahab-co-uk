@@ -1,0 +1,14 @@
+{% extends "base" %}
+
+{% block content %}
+
+<button type="button" class="btn btn-primary" onclick="fetchTopTracks();">Top Tracks</button>
+<button type="button" class="btn btn-primary" onclick="fetchTopArtists();">Top Artists</button>
+
+<div id="spotify-content"></div>
+
+{% endblock content %}
+
+{% block script %}
+<script src="/static/spotify.js" defer> </script>
+{% endblock script %}

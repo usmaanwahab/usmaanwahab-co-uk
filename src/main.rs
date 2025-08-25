@@ -62,8 +62,8 @@ fn callback(code: &str) -> Result<String, String> {
     }
 }
 
-#[get("/spotify")]
-fn spotify() -> Result<Redirect, String> {
+#[get("/spotify/auth")]
+fn spotify_authorise() -> Result<Redirect, String> {
     let spotify_credentials = match read_spotify_credentials() {
         Ok(credentials) => credentials,
         Err(e) => {
@@ -169,15 +169,20 @@ fn top_artists(term: String, limit: Option<u16>, offset: Option<u16> ) -> Result
         } 
     };
     
-    Ok(Template::render("top-tracks", context!{
+    Ok(Template::render("top-artists", context!{
         data: top_tracks
     }))
+}
+
+#[get("/spotify")]
+fn spotify() -> Template {
+    Template::render("spotify", context!{})
 }
 
 #[launch]
 fn rocket() -> Rocket<Build> {
     rocket::build()
         .mount("/static", FileServer::from("/root/static"))
-        .mount("/", routes![index, education, experience, projects, spotify, callback, currently_playing_widget, top_artists, top_tracks])
+        .mount("/", routes![index, education, experience, projects, spotify_authorise, callback, currently_playing_widget, top_artists, top_tracks, spotify])
         .attach(Template::fairing())
 }

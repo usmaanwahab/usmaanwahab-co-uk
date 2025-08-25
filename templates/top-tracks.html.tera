@@ -1,11 +1,10 @@
-{% extends "base" %}
 
 {% block content %}
 
 <div class="row">
 {% for track in data.items %}
 <div class="col-sm-2 mb-2">
-  <a href={{ track.href }} class="text-decoration-none text-reset">
+  <a href={{ track.href }} class="text-decoration-none text-reset" target="_blank">
   <div class="card p-3 justify-content-center align-items-center text-center">
     <img src="{{ track.album.images.0.url }}" width="160" height="160">
     <div class="card-body">
