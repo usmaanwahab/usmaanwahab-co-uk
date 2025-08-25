@@ -102,8 +102,8 @@ fn currently_playing_widget() -> Result<Template, RawHtml<String>> {
     let current_track_data = match get_current_track() {
         Ok(body) => body,
         Err(e) => {
-            eprintln!("Fetching current track failed: {}", e)
-            return RawHtml("Fetching current track failed");
+            eprintln!("Fetching current track failed: {}", e);
+            return Err(RawHtml("Fetching current track failed".to_string()));
         }
     };
 
@@ -113,62 +113,71 @@ fn currently_playing_widget() -> Result<Template, RawHtml<String>> {
     let image_url = current_track_data["item"]["album"]["images"][0]["url"].as_str().unwrap_or("/static/pause.jpg");
     let artist_name = current_track_data["item"]["album"]["artists"][0]["name"].as_str().unwrap_or("");
 
-    Template::render("audio-player", context! {
+    Ok(Template::render("audio-player", context! {
         track_name: track_name,
         progress_ms: progress_ms,
         duration_ms: duration_ms,
         image_url: image_url,
         artist_name: artist_name,
-    })
+    }))
 }
 
 
-#[get("/spotify/top/<item_type>/<term>")]
-fn top_artists(item_type: &str, term: &str) -> Result<Template, RawHtml<String>> {
-    // match refresh_spotify_auth() {
-    //     Ok(()) => println!("refreshed token"),
-    //     Err(e) => println!("Error: {}", e.to_string())
-    // };
-    //
-    // let current_track_data = match get_top_items() {
-    //     Ok(body) => body,
-    //     Err(e) => panic!{"{:?}", e}
-    // };
-}
+
 #[get("/spotify/top/tracks/<term>?<limit>&<offset>")]
-fn top_tracks(term: &str, limit: Option<u16>, offset: Option<u16>) -> Result<Template, RawHtml<String>> {
-    let term = match term {
+fn top_tracks(term: String, limit: Option<u16>, offset: Option<u16>) -> Result<Template, RawHtml<String>> {
+    let term = match term.as_str() {
         "short_term" => term,
         "medium_term" => term,
         "long_term" => term,
-        _ => return RawHtml("Term is not valid.")
-    }
+        _ => return Err(RawHtml("Term is not valid.".to_string()))
+    };
     
     let limit = limit.unwrap_or(10);
     let offset = offset.unwrap_or(0);
 
-    let top_tracks = match get_top_items("album", &term, &limit, &offset) {
+    let top_tracks = match get_top_items("tracks", &term, limit, offset) {
         Ok(body) => body,
         Err(e) => {
-            eprinln!("Error - could not fetch top tracks: {}", e);
-            return RawHtml("Erro - could not fetch top tracks")
+            eprintln!("Error - could not fetch top tracks: {}", e);
+            return Err(RawHtml("Error - could not fetch top tracks".to_string()));
         } 
-    }
+    };
     
-    Template::render("top-tracks", context!{
-        data: top_track
-    })
+    Ok(Template::render("top-tracks", context!{
+        data: top_tracks.to_string()
+    }))
 }
 
-#[get("/spotify/top/artists/<term>/")]
-fn top_artists(term: &str) -> Result<Template, RawHtml<String>> {
+#[get("/spotify/top/artists/<term>?<limit>&<offset>")]
+fn top_artists(term: String, limit: Option<u16>, offset: Option<u16> ) -> Result<Template, RawHtml<String>> {
+    let term = match term.as_str() {
+        "short_term" => term,
+        "medium_term" => term,
+        "long_term" => term,
+        _ => return Err(RawHtml("Term is not valid.".to_string()))
+    };
+    
+    let limit = limit.unwrap_or(10);
+    let offset = offset.unwrap_or(0);
 
+    let top_tracks = match get_top_items("artists", &term, limit, offset) {
+        Ok(body) => body,
+        Err(e) => {
+            eprintln!("Error - could not fetch top tracks: {}", e);
+            return Err(RawHtml("Error - could not fetch top tracks".to_string()));
+        } 
+    };
+    
+    Ok(Template::render("top-tracks", context!{
+        data: top_tracks.to_string()
+    }))
 }
 
 #[launch]
 fn rocket() -> Rocket<Build> {
     rocket::build()
         .mount("/static", FileServer::from("/root/static"))
-        .mount("/", routes![index, education, experience, projects, spotify, callback, currently_playing_widget, top_artists])
+        .mount("/", routes![index, education, experience, projects, spotify, callback, currently_playing_widget, top_artists, top_tracks])
         .attach(Template::fairing())
 }
