@@ -5,7 +5,7 @@ use rocket::response::Redirect;
 use rocket::{Build, Rocket};
 use rocket_dyn_templates::{Template, context};
 use rocket::fs::{FileServer};
-
+use rocket::response::content::RawHtml;
 use reqwest::Url;
 use reqwest::blocking::Client;
 
@@ -94,15 +94,19 @@ fn refresh() -> Result<String, String> {
 }
 
 #[get("/spotify/currently-playing")]
-fn currently_playing_widget() -> Template {
+fn currently_playing_widget() -> Result<Template, RawHtml<String>> {
     match refresh_spotify_auth() {
-        Ok(()) => println!("refreshed token"),
-        Err(e) => println!("Error: {}", e.to_string())
+        Ok(()) => (),
+        Err(e) => eprintln!("Error: {}", e.to_string())
     };
     let current_track_data = match get_current_track() {
         Ok(body) => body,
-        Err(e) => panic!{"{:?}", e}
+        Err(e) => {
+            eprintln!("Fetching current track failed: {}", e)
+            return RawHtml("Fetching current track failed");
+        }
     };
+
     let track_name = current_track_data["item"]["name"].as_str().unwrap_or("Nothing playing...");
     let progress_ms = current_track_data["progress_ms"].as_i64().unwrap_or(-1);
     let duration_ms = current_track_data["item"]["duration_ms"].as_i64().unwrap_or(-1);
@@ -118,26 +122,53 @@ fn currently_playing_widget() -> Template {
     })
 }
 
-#[get("/spotify/top/<type>/<term>/")]
-fn top_artists(type: &str, term: &str) -> Result<Template, RawHTML<String>> {
-    match refresh_spotify_auth() {
-        Ok(()) => println!("refreshed token"),
-        Err(e) => println!("Error: {}", e.to_string())
-    };
 
-    let current_track_data = match get_top_items() {
-        Ok(body) => body,
-        Err(e) => panic!{"{:?}", e}
-    };
-
-
+#[get("/spotify/top/<item_type>/<term>")]
+fn top_artists(item_type: &str, term: &str) -> Result<Template, RawHtml<String>> {
+    // match refresh_spotify_auth() {
+    //     Ok(()) => println!("refreshed token"),
+    //     Err(e) => println!("Error: {}", e.to_string())
+    // };
+    //
+    // let current_track_data = match get_top_items() {
+    //     Ok(body) => body,
+    //     Err(e) => panic!{"{:?}", e}
+    // };
+}
+#[get("/spotify/top/tracks/<term>?<limit>&<offset>")]
+fn top_tracks(term: &str, limit: Option<u16>, offset: Option<u16>) -> Result<Template, RawHtml<String>> {
+    let term = match term {
+        "short_term" => term,
+        "medium_term" => term,
+        "long_term" => term,
+        _ => return RawHtml("Term is not valid.")
+    }
     
+    let limit = limit.unwrap_or(10);
+    let offset = offset.unwrap_or(0);
+
+    let top_tracks = match get_top_items("album", &term, &limit, &offset) {
+        Ok(body) => body,
+        Err(e) => {
+            eprinln!("Error - could not fetch top tracks: {}", e);
+            return RawHtml("Erro - could not fetch top tracks")
+        } 
+    }
+    
+    Template::render("top-tracks", context!{
+        data: top_track
+    })
+}
+
+#[get("/spotify/top/artists/<term>/")]
+fn top_artists(term: &str) -> Result<Template, RawHtml<String>> {
+
 }
 
 #[launch]
 fn rocket() -> Rocket<Build> {
     rocket::build()
         .mount("/static", FileServer::from("/root/static"))
-        .mount("/", routes![index, education, experience, projects, spotify, callback, currently_playing_widget])
+        .mount("/", routes![index, education, experience, projects, spotify, callback, currently_playing_widget, top_artists])
         .attach(Template::fairing())
 }

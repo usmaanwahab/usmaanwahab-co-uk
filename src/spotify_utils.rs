@@ -35,7 +35,7 @@ pub fn get_current_track() -> Result<serde_json::Value, Box<dyn std::error::Erro
     Ok(json)
 }
 
-pub fn get_top_items(item_type: &str, range: &str, limit: u8, offset: u8) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
+pub fn get_top_items(item_type: &str, term: &str, limit: u8, offset: u8) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
     let spotify_auth_response = match read_spotify_auth() {
         Ok(spotify_auth) => spotify_auth,
         Err(e) => {
@@ -47,6 +47,9 @@ pub fn get_top_items(item_type: &str, range: &str, limit: u8, offset: u8) -> Res
     let mut headers = HeaderMap::new();
     let bearer_token = format!("Bearer {}", &spotify_auth_response.access_token);
     headers.insert("Authorization", HeaderValue::from_str(&bearer_token)?);
+    let params = HashMap()::new();
+
+
     let client = Client::new();
     let response = client
         .get("https://api.spotify.com/v1/me/top/artists")
