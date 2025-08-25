@@ -1,4 +1,3 @@
-
 {% extends "base" %}
 
 {% block content %}
@@ -47,7 +46,7 @@
   </section>
   <section>
     <h5 class="fw-bold">deploy.sh</h5>
-    <pre class="bg-light p-3 rounded"><code>{{ deploy_file_content }}</code></pre>
+    <pre class="p-3 rounded"><code>{{ deploy_file_content }}</code></pre>
   </section>
 </article>
 {% endblock content %}

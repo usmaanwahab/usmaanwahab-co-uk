@@ -1,10 +1,10 @@
 {% extends "base" %}
 
 {% block content %}
-
-<button type="button" class="btn btn-primary" onclick="fetchTopTracks();">Top Tracks</button>
-<button type="button" class="btn btn-primary" onclick="fetchTopArtists();">Top Artists</button>
-
+<div class="p-2 m-2 justify-content-center align-items-center text-center"">
+  <button type="button" class="btn btn-primary" onclick="fetchTopTracks();">Top Tracks</button>
+  <button type="button" class="btn btn-primary" onclick="fetchTopArtists();">Top Artists</button>
+</div>
 <div id="spotify-content"></div>
 
 {% endblock content %}
