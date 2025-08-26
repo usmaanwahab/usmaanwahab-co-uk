@@ -18,4 +18,4 @@ if [[ $build == true ]]; then
 fi
 scp -r usmaanwahab-co-uk/templates/ webserver:/root/
 scp -r usmaanwahab-co-uk/static/ webserver:/root/
-ssh -t webserver 'sleep 1 && export RUST_BACKTRACE=1 && ./usmaanwahab-co-uk'
+ssh -t webserver 'sleep 1 && ./usmaanwahab-co-uk'
