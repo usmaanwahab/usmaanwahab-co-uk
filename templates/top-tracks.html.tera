@@ -1,9 +1,11 @@
-
 {% block content %}
+<div class="d-flex justify-content-center">
+<div id="track-carousel" class="carousel" data-bs-ride="carousel" style="width: 300px;">
+<h4> Top Tracks </h4>
+<div class="carousel-inner">
 
-<div class="row">
 {% for track in data.items %}
-<div class="col-sm-2 mb-2">
+<div class="carousel-item {% if loop.index == 1 %} active {% endif %}" style="width: 300px;">
   <a href={{ track.href }} class="text-decoration-none text-reset" target="_blank">
   <div class="card p-3 justify-content-center align-items-center text-center">
     <img src="{{ track.album.images.0.url }}" width="160" height="160">
@@ -16,5 +18,16 @@
   </a>
 </div>
 {% endfor %}
+
+</div>
+<button class="carousel-control-prev" type="button" data-bs-target="#track-carousel" data-bs-slide="prev">
+  <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
+  <span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#track-carousel" data-bs-slide="next">
+  <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
+  <span class="visually-hidden">Next</span>
+</button>
+</div>
 </div>
 {% endblock content %}
