@@ -4,10 +4,15 @@ use reqwest::blocking::Client;
 use reqwest::header::{HeaderMap, HeaderValue};
 
 use crate::spotify_auth::{
-    read_spotify_auth
+    read_spotify_auth,
+    refresh_spotify_auth
 };
 
 pub fn get_current_track() -> Result<serde_json::Value, Box<dyn std::error::Error>> {
+    match refresh_spotify_auth() {
+        Ok(()) => (),
+        Err(e) => eprintln!("Error: {}", e.to_string())
+    };
     let spotify_auth_response = match read_spotify_auth() {
         Ok(spotify_auth) => spotify_auth,
         Err(e) => {
@@ -36,6 +41,10 @@ pub fn get_current_track() -> Result<serde_json::Value, Box<dyn std::error::Erro
 }
 
 pub fn get_top_items(item_type: &str, term: &str, limit: u16, offset: u16) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
+    match refresh_spotify_auth() {
+        Ok(()) => (),
+        Err(e) => eprintln!("Error: {}", e.to_string())
+    };
     let spotify_auth_response = match read_spotify_auth() {
         Ok(spotify_auth) => spotify_auth,
         Err(e) => {
