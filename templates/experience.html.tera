@@ -3,18 +3,7 @@
 {% block content %}
 <div class="container my-4">
   <div class="row g-4">
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h5 class="card-title mb-0">Software Engineer @ GUSS</h5>
-          <small>Feb 2024 – Present</small>
-        </div>
-        <div class="card-body">
-          <hr> 
-        </div>
-      </div>
-    </div>
-
+ 
     <div class="col-12">
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
@@ -30,6 +19,32 @@
     <div class="col-12">
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
+          <h5 class="card-title mb-0">Software Engineer @ GUSS</h5>
+          <small>Feb 2024 – Present</small>
+        </div>
+        <div class="card-body">
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+          <div>
+            <h5 class="card-title mb-0">Student Caller @ UofG </h5>
+            <small>Feb 2024 - March 2024</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
           <div>
             <h5 class="card-title mb-0">Head of Software Development and IT @ UGRacing</h5>
             <small>Aug 2023 – Aug 2024</small>
@@ -43,7 +58,7 @@
 
     <div class="col-12">
       <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-secondary text-white">
           <div>
             <h5 class="card-title mb-0">Software Developer @ UGRacing </h5>
             <small>Aug 2022 - Aug 2023</small>
@@ -54,6 +69,35 @@
         </div>
       </div>
     </div>
+
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+          <div>
+            <h5 class="card-title mb-0">Waiter/Receptionist @ Glynhill Hotel </h5>
+            <small>Sep 2021 - Feb 2024</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <div>
+            <h5 class="card-title mb-0">Shop Assistant @ Milton Newsagents </h5>
+            <small>Dec 2020 - Present</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 {% endblock content %}
