@@ -30,7 +30,23 @@ fn index() -> Template {
 
 #[get("/education")]
 fn education() -> Template {
-    Template::render("education", context! {})
+    let subjects: [&str; 14] = [
+        "Advanced Systems Programming",
+        "Cyber Security Fundamentals",
+        "Software Engineering Release Practices",
+        "Functional Programming",
+        "Distributed and Parallel Technologies",
+        "Computer Architecture",
+        "Algorithmics 2",
+        "Programming Languages",
+        "Database Systems",
+        "Networked Systems",
+        "Operating Systems",
+        "Algorithmics 1",
+        "Data Fundamentals",
+        "Systems Programming",
+    ];
+    Template::render("education", context! {subjects: subjects})
 }
 
 #[get("/experience")]
