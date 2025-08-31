@@ -218,10 +218,20 @@ fn league() -> Result<Template, String> {
             break;
         }
     }
-    match data {
-        Some(data) => Ok(Template::render("league", context! {data: data})),
-        None => Err("lefreak".to_string()),
-    }
+
+    let data = match data {
+        Some(data) => data,
+        None => return Err("lefreak".to_string()),
+    };
+
+    let total = data.wins + data.losses;
+    let loss_percent = data.losses / total;
+    let win_percent = data.wins / total;
+
+    Ok(Template::render(
+        "league",
+        context! {data: data, win_percent: win_percent, loss_percent: loss_percent},
+    ))
 }
 
 #[launch]
