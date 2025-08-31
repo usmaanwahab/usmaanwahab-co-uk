@@ -1,32 +1,25 @@
-{% extends "base" %}
-
-{% block content %}
-
-
-
 <div class="ranked-details container my-4">
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <h5 class="card-title text-primary">Ranked Stats</h5>
-      <ul class="list-unstyled mb-3">
-        <li><strong>Tier:</strong> {{data.tier}}</li>
-        <li><strong>Rank:</strong> {{data.rank}}</li>
-        <li><strong>Wins:</strong> {{data.wins}}</li>
-        <li><strong>Losses:</strong> {{data.losses}}</li>
+  <div class="card shadow-sm border-0" style="max-width: 400px;">
+    <div class="card-body text-center">
+      <h5 class="card-title text-primary mb-4">Ranked Stats</h5>
+
+      <img src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/{{ data.tier | lower }}.svg"
+           alt="{{ data.tier }} badge"
+           style="width: 150px; height: auto; margin-bottom: 1rem;">
+
+      <ul class="list-unstyled mb-4 text-start mx-auto" style="max-width: 300px;">
+        <li><strong>Tier:</strong> {{ data.tier }}</li>
+        <li><strong>Rank:</strong> {{ data.rank }}</li>
+        <li><strong>Wins:</strong> {{ data.wins }}</li>
+        <li><strong>Losses:</strong> {{ data.losses }}</li>
       </ul>
 
       <div class="progress" style="height: 25px;">
         <div class="progress-bar bg-primary" role="progressbar" style="width: {{ win_percent }}%;" aria-valuenow="{{ win_percent }}" aria-valuemin="0" aria-valuemax="100">
-          Wins ({{ data.wins }})
         </div>
         <div class="progress-bar bg-danger" role="progressbar" style="width: {{ loss_percent }}%;" aria-valuenow="{{ loss_percent }}" aria-valuemin="0" aria-valuemax="100">
-          Losses ({{ data.losses }})
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
-
-{% endblock content %}

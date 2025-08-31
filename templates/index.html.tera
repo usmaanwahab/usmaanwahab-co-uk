@@ -1,7 +1,10 @@
 {% extends "base" %} 
 
 {% block content %}
-  <div id="audio-player-container"></div>
+  <div class="row">
+  <div id="audio-player-container" class="col-md-6"></div>
+  <div id="league-container" class="col-md-6"></div>
+  </div>
 {% endblock content %}
 
 {% block script %}

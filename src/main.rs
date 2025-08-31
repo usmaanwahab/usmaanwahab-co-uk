@@ -227,8 +227,8 @@ fn league() -> Result<Template, String> {
     };
 
     let total = data.wins + data.losses;
-    let loss_percent = data.losses / total;
-    let win_percent = data.wins / total;
+    let loss_percent = (data.losses as f64 / total as f64) * 100.0;
+    let win_percent = (data.wins as f64 / total as f64) * 100.0;
 
     Ok(Template::render(
         "league",

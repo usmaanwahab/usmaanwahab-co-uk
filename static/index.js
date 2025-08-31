@@ -7,6 +7,15 @@ function reloadAudioPlayerWidget() {
     });
 }
 
+function fetchRankedStats() {
+  fetch("/league")
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById("league-container").innerHTML = html;
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   reloadAudioPlayerWidget();
+  fetchRankedStats();
 });
