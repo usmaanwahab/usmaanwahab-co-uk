@@ -2,9 +2,7 @@ use serde_json;
 
 use reqwest::{blocking::Client, header::HeaderMap, header::HeaderValue};
 use serde::{Deserialize, Serialize};
-use std::fs;
-
-const RIOT_CONFIG: &str = "riot-config.json";
+use std::env;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RiotConfig {
@@ -37,9 +35,9 @@ pub struct LeagueV4 {
 }
 
 pub fn read_riot_api_key() -> Result<RiotConfig, Box<dyn std::error::Error>> {
-    let json_data = fs::read_to_string(RIOT_CONFIG)?;
-    let config: RiotConfig = serde_json::from_str(&json_data)?;
-    Ok(config)
+    Ok(RiotConfig {
+        key: env::var("RIOT_API_KEY").expect("RIOT_API_KEY not set"),
+    })
 }
 
 pub fn get_puuid_by_name_and_tag(

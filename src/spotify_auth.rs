@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 
+use serde::{Deserialize, Serialize};
+use serde_json;
+use std::env;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
-
-use serde::{Deserialize, Serialize};
-use serde_json;
 use std::time::{Duration, SystemTime};
 
 use reqwest::blocking::Client;
@@ -15,7 +15,6 @@ use base64::Engine;
 use base64::engine::general_purpose;
 
 const SPOTIFY_AUTH_PATH: &str = "spotify_auth.json";
-const CONFIG_PATH: &str = "config.json";
 const REDIRECT_URI: &str = "https://usmaanwahab.co.uk/callback";
 const TOKEN_ENDPOINT: &str = "https://accounts.spotify.com/api/token";
 
@@ -35,8 +34,10 @@ pub struct SpotifyAuthResponse {
 }
 
 pub fn read_spotify_credentials() -> Result<SpotifyAuthCredentials, Box<dyn std::error::Error>> {
-    let json_data = fs::read_to_string(CONFIG_PATH)?;
-    let spotify_credentials: SpotifyAuthCredentials = serde_json::from_str(&json_data)?;
+    let spotify_credentials = SpotifyAuthCredentials {
+        client_id: env::var("SPOTIFY_CLIENT_ID").expect("SPOTIFY_CLIENT_ID not set"),
+        client_secret: env::var("SPOTIFY_CLIENT_SECRET").expect("SPOTIFY_CLIENT_SECRET not set"),
+    };
     Ok(spotify_credentials)
 }
 

@@ -1,7 +1,9 @@
 #[macro_use]
 extern crate rocket;
 
+use dotenv::dotenv;
 use reqwest::Url;
+
 use reqwest::blocking::Client;
 use rocket::fs::FileServer;
 use rocket::response::Redirect;
@@ -236,6 +238,8 @@ fn league() -> Result<Template, String> {
 
 #[launch]
 fn rocket() -> Rocket<Build> {
+    dotenv().ok();
+
     rocket::build()
         .mount("/static", FileServer::from("/root/static"))
         .mount(
