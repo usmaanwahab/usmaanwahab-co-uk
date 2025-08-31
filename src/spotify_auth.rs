@@ -4,9 +4,9 @@ use std::fs;
 use std::fs::File;
 use std::io::Write;
 
-use std::time::{Duration, SystemTime};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use serde_json;
+use std::time::{Duration, SystemTime};
 
 use reqwest::blocking::Client;
 use reqwest::header::{HeaderMap, HeaderValue};
@@ -22,7 +22,7 @@ const TOKEN_ENDPOINT: &str = "https://accounts.spotify.com/api/token";
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SpotifyAuthCredentials {
     pub client_id: String,
-    pub client_secret: String
+    pub client_secret: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -31,7 +31,7 @@ pub struct SpotifyAuthResponse {
     pub token_type: String,
     pub scope: Option<String>,
     pub expires_in: u16,
-    pub refresh_token: Option<String>
+    pub refresh_token: Option<String>,
 }
 
 pub fn read_spotify_credentials() -> Result<SpotifyAuthCredentials, Box<dyn std::error::Error>> {
@@ -61,16 +61,18 @@ pub fn request_spotify_access_token(code: &str) -> Result<(), Box<dyn std::error
     params.insert("redirect_uri", REDIRECT_URI);
 
     let encoded_secret_and_id = general_purpose::STANDARD.encode(&format!(
-            "{}:{}",
-            spotify_credentials.client_id, spotify_credentials.client_secret
+        "{}:{}",
+        spotify_credentials.client_id, spotify_credentials.client_secret
     ));
 
-    let auth_header = HeaderValue::from_str(
-        &format!("Basic {}", encoded_secret_and_id))?;
+    let auth_header = HeaderValue::from_str(&format!("Basic {}", encoded_secret_and_id))?;
 
     let mut headers = HeaderMap::new();
     headers.insert("Authorization", auth_header);
-    headers.insert("Content-Type", HeaderValue::from_static("applications/x-www-form-urlencoded"));
+    headers.insert(
+        "Content-Type",
+        HeaderValue::from_static("applications/x-www-form-urlencoded"),
+    );
 
     let client = Client::new();
     let response = client
@@ -88,7 +90,6 @@ pub fn request_spotify_access_token(code: &str) -> Result<(), Box<dyn std::error
     Ok(())
 }
 
-
 pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
     let spotify_credentials = match read_spotify_credentials() {
         Ok(credentials) => credentials,
@@ -97,7 +98,7 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
             return Err(e);
         }
     };
-    
+
     let spotify_auth_response = match read_spotify_auth() {
         Ok(spotify_auth) => spotify_auth,
         Err(e) => {
@@ -121,22 +122,24 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
         Some(t) => t,
         _ => panic!("Could not read old refresh_token - This should not be possible."),
     };
-    
+
     let mut params = HashMap::new();
     params.insert("grant_type", "refresh_token");
     params.insert("refresh_token", &refresh_token);
-    
+
     let encoded_secret_and_id = general_purpose::STANDARD.encode(&format!(
-            "{}:{}",
-            spotify_credentials.client_id, spotify_credentials.client_secret
+        "{}:{}",
+        spotify_credentials.client_id, spotify_credentials.client_secret
     ));
 
-    let auth_header = HeaderValue::from_str(
-        &format!("Basic {}", encoded_secret_and_id))?;
+    let auth_header = HeaderValue::from_str(&format!("Basic {}", encoded_secret_and_id))?;
 
     let mut headers = HeaderMap::new();
     headers.insert("Authorization", auth_header);
-    headers.insert("Content-Type", HeaderValue::from_static("applications/x-www-form-urlencoded"));
+    headers.insert(
+        "Content-Type",
+        HeaderValue::from_static("applications/x-www-form-urlencoded"),
+    );
 
     let client = Client::new();
     let response = client
@@ -148,7 +151,7 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
     let body = response.text()?;
     let mut json: SpotifyAuthResponse = serde_json::from_str(&body)?;
     json.refresh_token = Some(refresh_token);
-    
+
     let json_str = serde_json::to_string_pretty(&json)?;
     let mut file = File::create(SPOTIFY_AUTH_PATH)?;
     file.write_all(json_str.as_bytes())?;
