@@ -10,7 +10,17 @@ function fetchTopTracks() {
     .then(html => document.getElementById("top-tracks").innerHTML = html)
 }
 
+function reloadAudioPlayerWidget() {
+  fetch("/spotify/currently-playing")
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById("audio-player-container").innerHTML = html;
+      initAudioPlayer();
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   fetchTopTracks();
   fetchTopArtists();
+  reloadAudioPlayerWidget()
 })
