@@ -54,6 +54,11 @@
               <i class="bi bi-spotify"></i> Spotify
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/league">
+              <img src="https://images.icon-icons.com/3914/PNG/512/riotgames_logo_icon_248640.png" width="16px" height="16px"> League
+            </a>
+          </li>
         </ul>
       </nav>
 

@@ -88,7 +88,10 @@ fn spotify_authorise() -> Result<Redirect, String> {
     let params = [
         ("response_type", "code"),
         ("client_id", spotify_credentials.client_id.as_str()),
-        ("scope", "user-read-currently-playing user-top-read"),
+        (
+            "scope",
+            "user-read-currently-playing user-top-read user-read-recently-played",
+        ),
         ("redirect_uri", "https://usmaanwahab.co.uk/callback"),
     ];
 

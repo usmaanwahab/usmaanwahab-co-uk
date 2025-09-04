@@ -1,25 +1,28 @@
-<div class="ranked-details container my-4">
-  <div class="card shadow-sm border-0" style="max-width: 400px;">
-    <div class="card-body text-center">
-      <h5 class="card-title text-primary mb-4">Ranked Stats</h5>
+{% extends "base" %}
 
-      <img src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/{{ data.tier | lower }}.svg"
-           alt="{{ data.tier }} badge"
-           style="width: 150px; height: auto; margin-bottom: 1rem;">
+{% block head %}
+<link rel="stylesheet" href="/static/league.css">
+{% endblock head%}
 
-      <ul class="list-unstyled mb-4 text-start mx-auto" style="max-width: 300px;">
-        <li><strong>Tier:</strong> {{ data.tier }}</li>
-        <li><strong>Rank:</strong> {{ data.rank }}</li>
-        <li><strong>Wins:</strong> {{ data.wins }}</li>
-        <li><strong>Losses:</strong> {{ data.losses }}</li>
-      </ul>
+{% block content %}
 
-      <div class="progress" style="height: 25px;">
-        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ win_percent }}%;" aria-valuenow="{{ win_percent }}" aria-valuemin="0" aria-valuemax="100">
-        </div>
-        <div class="progress-bar bg-danger" role="progressbar" style="width: {{ loss_percent }}%;" aria-valuenow="{{ loss_percent }}" aria-valuemin="0" aria-valuemax="100">
-        </div>
-      </div>
+<div class="custom-card">
+    <div style="text-align: center;">
+        <img src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-navigation/global/default/activity-center/league-logo-rest.svg">
     </div>
-  </div>
+
+    <div class="custom-card-art" style="padding-left: 12px; align-content: center;">
+        <img src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/{{ data.tier | lower }}.svg" style="width: 100%; justify-content: center;">
+    </div>
+
+    <div class="custom-card-info">
+        <div class="customer-card--title">{{ data.tier }} {{ data.rank }} ({{ data.leaguePoints }} LP)</div>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 20px; font-size: 0.95rem; font-weight: 500; color: #333; margin-top: 10px;">
+      <span style="color: #1db954;">Wins: {{ data.wins }}</span>
+      <span style="color: #dc3545;">Losses: {{ data.losses }}</span>
+    </div>
 </div>
+
+{% endblock content %}
