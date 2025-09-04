@@ -1,13 +1,35 @@
 {% extends "base" %} 
 
 {% block content %}
-  <div class="row">
-  <div id="audio-player-container" class="col-md-6"></div>
-  <div id="league-container" class="col-md-6"></div>
-  </div>
-{% endblock content %}
 
-{% block script %}
-<script src="/static/index.js" defer></script>
-<script src="/static/audio-player.js" defer></script>
-{% endblock script %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-7 mx-auto">
+      <div class="text-center mb-3">
+        <h1 class="fw-semibold mb-2">Hi, I’m Usmaan Wahab!</h1>
+        <p class="text-muted mb-0">Final-year Computer Science @ University of Glasgow</p>
+      </div>
+
+      <div class="bg-white border rounded-3 p-4 p-md-5 shadow-sm" style="text-align: justify;">
+        <p class="mb-3">
+          I’m finishing my degree in Computer Science at the University of Glasgow, where I work part-time as a
+          Software Engineer at GUSS and as a Teaching Assistant. Outside of studying, I enjoy solving problems with
+          code, exploring interesting languages, and experimenting with side projects.
+        </p>
+
+        <p class="mb-3">
+          I am particularly interested in networks and Rust, but I also enjoy working with higher-level languages
+          such as Python and a little Haskell. JavaScript and I… let’s just say we don’t always get along. I languages 
+          with consistent scoping rules.
+        </p>
+
+        <p class="mb-0">
+          I like building things that are fast, reliable, and thoughtfully designed — whether that’s systems code,
+          tooling, or small utilities that make everyday workflows nicer.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}
