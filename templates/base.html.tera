@@ -86,8 +86,8 @@
     
     </div>
   </div>
-</body>
 <script src="/static/base.js" defer></script>
 <script>hljs.highlightAll();</script>
 {% block script %} {% endblock script %}
+</body>
 </html>

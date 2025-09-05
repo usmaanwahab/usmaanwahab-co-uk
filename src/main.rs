@@ -18,7 +18,7 @@ mod spotify_utils;
 use spotify_utils::{get_current_track, get_top_items};
 
 mod riot_api;
-use riot_api::{LeagueV4, get_puuid_by_name_and_tag, get_ranked_stats_by_puuid};
+use riot_api::{LeagueV4, get_match_history, get_puuid_by_name_and_tag, get_ranked_stats_by_puuid};
 
 #[get("/")]
 fn index() -> Template {
@@ -239,6 +239,16 @@ fn league() -> Result<Template, String> {
     ))
 }
 
+#[get("/league/match-history")]
+fn match_history() -> Result<Template, String> {
+    let acc_v1 = get_puuid_by_name_and_tag("Weetabicx", "EUW").map_err(|e| e.to_string())?;
+    let match_history = get_match_history(&acc_v1.puuid).map_err(|e| e.to_string())?;
+
+    Ok(Template::render(
+        "league-match-history",
+        context! {matches: match_history, puuid: acc_v1.puuid},
+    ))
+}
 #[launch]
 fn rocket() -> Rocket<Build> {
     dotenv().ok();
@@ -258,7 +268,8 @@ fn rocket() -> Rocket<Build> {
                 top_artists,
                 top_tracks,
                 spotify,
-                league
+                league,
+                match_history
             ],
         )
         .attach(Template::fairing())

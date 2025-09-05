@@ -25,4 +25,9 @@
     </div>
 </div>
 
+<div id="match-history"></div>
 {% endblock content %}
+
+{% block script %}
+<script src="/static/league.js" defer></script>
+{% endblock script %}

@@ -2,7 +2,7 @@ use serde_json;
 
 use reqwest::{blocking::Client, header::HeaderMap, header::HeaderValue};
 use serde::{Deserialize, Serialize};
-use std::env;
+use std::{env, fmt::format};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RiotConfig {
@@ -83,4 +83,35 @@ pub fn get_ranked_stats_by_puuid(
     let json: Vec<LeagueV4> = serde_json::from_str(&body)?;
 
     Ok(json)
+}
+
+pub fn get_match_history(
+    puuid: &str,
+) -> Result<Vec<serde_json::Value>, Box<dyn std::error::Error>> {
+    let riot_config = read_riot_api_key()?;
+    let url: String = format!(
+        "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids",
+        puuid
+    );
+    let mut headers = HeaderMap::new();
+    headers.insert("X-Riot-Token", HeaderValue::from_str(&riot_config.key)?);
+
+    let client = Client::new();
+    let response = client.get(url).headers(headers.clone()).send()?;
+    let body = response.text()?;
+    let json: Vec<String> = serde_json::from_str(&body)?;
+
+    let mut match_history = Vec::<serde_json::Value>::new();
+
+    for match_id in json {
+        let url: String = format!(
+            "https://europe.api.riotgames.com/lol/match/v5/matches/{}",
+            &match_id
+        );
+        let response = client.get(url).headers(headers.clone()).send()?;
+        let body = response.text()?;
+        let json: serde_json::Value = serde_json::from_str(&body)?;
+        match_history.push(json);
+    }
+    Ok(match_history)
 }
