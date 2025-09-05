@@ -5,77 +5,121 @@
             <div class="card shadow-sm w-100">
                 <div class="card-body">
                     <h5 class="card-title">
-                        {% set my_team_id = 0 %}
-                        {% for p in match.info.participants %}
-                            {% if p.puuid == puuid %}
-                                {% set my_team_id = p.teamId %}
-                            {% endif %}
-                        {% endfor %}
-
-                        {% set my_team_win = "" %}
-                        {% for t in match.info.teams %}
-                            {% if t.teamId == my_team_id %}
-                                {% set my_team_win = t.win %}
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if my_team_win == "Win" %}
-                            Victory
-                        {% else %}
-                            Defeat
-                        {% endif %}
+                      <span class="text-success">Victory</span>
                     </h5>
 
-                    <h6 class="card-subtitle mb-2 text-muted">
+                    <h6 class="card-subtitle mb-3 text-muted">
                         {% set mins = match.info.gameDuration / 60 | int %}
                         {% set secs = match.info.gameDuration % 60 %}
                         Mode: {{ match.info.gameMode }} | Duration: {{ mins }}m {{ secs }}s
                     </h6>
+
                     <div class="row">
                         <div class="col-md-6">
+                            <!-- blue team -->
                             <div class="list-group">
                                 <div class="list-group-item bg-primary text-white text-center fw-bold">Blue Team</div>
                                 {% for p in match.info.participants %}
-                            {% if p.teamId == 100 %}
+                                {% if p.teamId == 100 %}
                                 <div class="list-group-item d-flex justify-content-between align-items-center
-                                {% if p.puuid == puuid %} border-success border-3 bg-light {% endif %}">
+                                    {% if p.puuid == puuid %} border-success border-3 bg-light {% endif %}"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#player-{{ match.metadata.matchId }}-{{ p.participantId }}"
+                                    aria-expanded="false"
+                                    aria-controls="player-{{ match.metadata.matchId }}-{{ p.participantId }}">
                                     <div class="d-flex align-items-center">
                                         <img alt="{{ p.championName }}" class="rounded me-2" height="50" 
                                         src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/{{ p.championName | lower }}/skins/base/images/{{ p.championName | lower }}_splash_tile_0.jpg" width="50"/>
                                         <div>
-                                            <strong>{{ p.championName }}</strong>
+                                            <strong>{{ p.championName }}</strong><br>
                                             <small class="text-muted">({{ p.riotIdGameName }}#{{ p.riotIdTagline }})</small>
                                         </div>
                                     </div>
                                     <span class="badge bg-primary rounded-pill">{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span>
                                 </div>
+                                <!-- drop down stats -->
+                                <!-- TODO: accordian or visible dropdown indicator --> 
+                                <div class="collapse mt-2" id="player-{{ match.metadata.matchId }}-{{ p.participantId }}">
+                                    <div class="card card-body bg-light">
+                                        <div class="row text-center text-sm-start">
+                                            <div class="col-6 col-md-4 mb-2"><strong>Damage Dealt:</strong> {{ p.totalDamageDealtToChampions }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Damage Taken:</strong> {{ p.totalDamageTaken }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Damage Mitigated:</strong> {{ p.damageSelfMitigated }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Gold Earned:</strong> {{ p.goldEarned }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>CS:</strong> {{ p.totalMinionsKilled + p.neutralMinionsKilled }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Jungle CS:</strong> {{ p.neutralMinionsKilled }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Vision Score:</strong> {{ p.visionScore }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Wards Placed:</strong> {{ p.wardsPlaced }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Wards Killed:</strong> {{ p.wardsKilled }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Largest Multi-Kill:</strong> {{ p.largestMultiKill }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Time CC’d:</strong> {{ p.timeCCingOthers }}s</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Turrets Killed:</strong> {{ p.turretKills }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Dragons Killed:</strong> {{ p.dragonKills }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Barons Killed:</strong> {{ p.baronKills }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>First Blood:</strong> {% if p.firstBloodKill %}Yes{% else %}No{% endif %}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>First Tower:</strong> {% if p.firstTowerKill %}Yes{% else %}No{% endif %}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Total Heal:</strong> {{ p.totalHeal }}</div>
+                                        </div>
+                                    </div>
+                                </div>
                                 {% endif %}
-                        {% endfor %}
+                                {% endfor %}
                             </div>
                         </div>
+                        <!-- red team -->
                         <div class="col-md-6">
                             <div class="list-group">
                                 <div class="list-group-item bg-danger text-white text-center fw-bold">Red Team</div>
                                 {% for p in match.info.participants %}
-                            {% if p.teamId == 200 %}
+                                {% if p.teamId == 200 %}
                                 <div class="list-group-item d-flex justify-content-between align-items-center
-                                {% if p.puuid == puuid %} border-success border-3 bg-light {% endif %}">
+                                    {% if p.puuid == puuid %} border-success border-3 bg-light {% endif %}"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#player-{{ match.metadata.matchId }}-{{ p.participantId }}"
+                                    aria-expanded="false"
+                                    aria-controls="player-{{ match.metadata.matchId }}-{{ p.participantId }}">
                                     <div class="d-flex align-items-center">
                                         <img alt="{{ p.championName }}" class="rounded me-2" height="50" 
                                         src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/{{ p.championName | lower }}/skins/base/images/{{ p.championName | lower }}_splash_tile_0.jpg" width="50"/>
                                         <div>
-                                            <strong>{{ p.championName }}</strong>
+                                            <strong>{{ p.championName }}</strong><br>
                                             <small class="text-muted">({{ p.riotIdGameName }}#{{ p.riotIdTagline }})</small>
                                         </div>
                                     </div>
-                                    <span class="badge bg-primary rounded-pill">{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span>
+                                    <span class="badge bg-danger rounded-pill">{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span>
+                                </div>
+                                <!-- drop down stats -->
+                                <!-- TODO: accordian or visible dropdown indicator --> 
+                                <div class="collapse mt-2" id="player-{{ match.metadata.matchId }}-{{ p.participantId }}">
+                                    <div class="card card-body bg-light">
+                                        <div class="row text-center text-sm-start">
+                                            <div class="col-6 col-md-4 mb-2"><strong>Damage Dealt:</strong> {{ p.totalDamageDealtToChampions }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Damage Taken:</strong> {{ p.totalDamageTaken }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Damage Mitigated:</strong> {{ p.damageSelfMitigated }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Gold Earned:</strong> {{ p.goldEarned }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>CS:</strong> {{ p.totalMinionsKilled + p.neutralMinionsKilled }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Jungle CS:</strong> {{ p.neutralMinionsKilled }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Vision Score:</strong> {{ p.visionScore }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Wards Placed:</strong> {{ p.wardsPlaced }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Wards Killed:</strong> {{ p.wardsKilled }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Largest Multi-Kill:</strong> {{ p.largestMultiKill }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Time CC’d:</strong> {{ p.timeCCingOthers }}s</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Turrets Killed:</strong> {{ p.turretKills }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Dragons Killed:</strong> {{ p.dragonKills }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Barons Killed:</strong> {{ p.baronKills }}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>First Blood:</strong> {% if p.firstBloodKill %}Yes{% else %}No{% endif %}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>First Tower:</strong> {% if p.firstTowerKill %}Yes{% else %}No{% endif %}</div>
+                                            <div class="col-6 col-md-4 mb-2"><strong>Total Heal:</strong> {{ p.totalHeal }}</div>
+                                        </div>
+                                    </div>
                                 </div>
                                 {% endif %}
-                        {% endfor %}
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="card-footer text-end">
                     <small class="text-muted">
                         {{ match.info.gameStartTimestamp / 1000 | int | date(format="%Y-%m-%d %H:%M:%S") }}

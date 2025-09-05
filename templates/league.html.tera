@@ -25,7 +25,12 @@
     </div>
 </div>
 
-<div id="match-history"></div>
+<div id="match-history">
+  <div class="m-5 text-center">
+    <div class="spinner-border" role="status" aria-hidden="true"></div>
+    <div class="mt-2">Loading match history...</div>
+  </div>
+</div>
 {% endblock content %}
 
 {% block script %}
