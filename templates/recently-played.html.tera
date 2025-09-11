@@ -1,0 +1,17 @@
+<div class="container mx-auto">
+  <ul class="list-group">
+    {% for track in tracks %}
+      <li class="list-group-item d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <img src="{{ track.image_url }}" alt="{{ track.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; margin-right:10px;">
+          <div>
+            <div class="fw-bold">{{ track.name }}</div>
+            <small class="text-muted">{{ track.artist }}</small>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+

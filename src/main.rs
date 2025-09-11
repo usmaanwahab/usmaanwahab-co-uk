@@ -15,10 +15,12 @@ mod spotify_auth;
 use spotify_auth::{read_spotify_credentials, refresh_spotify_auth, request_spotify_access_token};
 
 mod spotify_utils;
-use spotify_utils::{get_current_track, get_top_items};
+use spotify_utils::{get_current_track, get_recently_played, get_top_items};
 
 mod riot_api;
 use riot_api::{LeagueV4, get_match_history, get_puuid_by_name_and_tag, get_ranked_stats_by_puuid};
+
+use crate::spotify_utils::TrackInfo;
 
 #[get("/")]
 fn index() -> Template {
@@ -205,6 +207,16 @@ fn top_artists(
     ))
 }
 
+#[get("/spotify/recent")]
+fn spotify_recent() -> Result<Template, String> {
+    let tracks: Vec<TrackInfo> = get_recently_played().map_err(|e| e.to_string())?;
+
+    Ok(Template::render(
+        "recently-played",
+        context! {tracks: tracks},
+    ))
+}
+
 #[get("/spotify")]
 fn spotify() -> Template {
     Template::render("spotify", context! {})
@@ -226,7 +238,7 @@ fn league() -> Result<Template, String> {
 
     let data = match data {
         Some(data) => data,
-        None => return Err("lefreak".to_string()),
+        None => return Err("Error - No data found".to_string()),
     };
 
     let total = data.wins + data.losses;
@@ -269,7 +281,8 @@ fn rocket() -> Rocket<Build> {
                 top_tracks,
                 spotify,
                 league,
-                match_history
+                match_history,
+                spotify_recent
             ],
         )
         .attach(Template::fairing())

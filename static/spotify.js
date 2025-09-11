@@ -19,8 +19,17 @@ function reloadAudioPlayerWidget() {
     });
 }
 
+function fetchRecentlyPlayed() {
+  fetch("/spotify/recent")
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById("recently-played").innerHTML = html;
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   fetchTopTracks();
   fetchTopArtists();
-  reloadAudioPlayerWidget()
+  reloadAudioPlayerWidget();
+  fetchRecentlyPlayed();
 })
