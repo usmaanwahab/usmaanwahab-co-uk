@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use reqwest::RequestBuilder;
+use reqwest::blocking;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::env;
@@ -158,4 +160,18 @@ pub fn refresh_spotify_auth() -> Result<(), Box<dyn std::error::Error>> {
     file.write_all(json_str.as_bytes())?;
 
     Ok(())
+}
+
+pub fn authorised_spotify_client(
+    method: reqwest::Method,
+    url: &str,
+) -> Result<blocking::RequestBuilder, Box<dyn std::error::Error>> {
+    refresh_spotify_auth()?;
+    let spotify_auth_response = read_spotify_auth()?;
+
+    let mut headers = HeaderMap::new();
+    let bearer_token = format!("Bearer {}", &spotify_auth_response.access_token);
+    headers.insert("Authorization", HeaderValue::from_str(&bearer_token)?);
+
+    Ok(Client::new().request(method, url).headers(headers))
 }

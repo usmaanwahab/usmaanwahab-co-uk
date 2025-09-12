@@ -20,7 +20,7 @@ use spotify_utils::{get_current_track, get_recently_played, get_top_items};
 mod riot_api;
 use riot_api::{LeagueV4, get_match_history, get_puuid_by_name_and_tag, get_ranked_stats_by_puuid};
 
-use crate::spotify_utils::TrackInfo;
+use crate::spotify_utils::Track;
 
 #[get("/")]
 fn index() -> Template {
@@ -209,7 +209,7 @@ fn top_artists(
 
 #[get("/spotify/recent")]
 fn spotify_recent() -> Result<Template, String> {
-    let tracks: Vec<TrackInfo> = get_recently_played().map_err(|e| e.to_string())?;
+    let tracks: Vec<Track> = get_recently_played().map_err(|e| e.to_string())?;
 
     Ok(Template::render(
         "recently-played",
