@@ -1,8 +1,8 @@
 use serde_json;
+use std::env;
 
 use reqwest::{blocking::Client, header::HeaderMap, header::HeaderValue};
 use serde::{Deserialize, Serialize};
-use std::{env, fmt::format};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RiotConfig {

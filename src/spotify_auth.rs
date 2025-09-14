@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use reqwest::RequestBuilder;
 use reqwest::blocking;
 use serde::{Deserialize, Serialize};
 use serde_json;

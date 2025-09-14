@@ -2,25 +2,23 @@
 extern crate rocket;
 
 use dotenv::dotenv;
-use reqwest::Url;
 
 use reqwest::blocking::Client;
 use rocket::fs::FileServer;
-use rocket::response::Redirect;
-use rocket::response::content::RawHtml;
 use rocket::{Build, Rocket};
 use rocket_dyn_templates::{Template, context};
 
 mod spotify_auth;
-use spotify_auth::{read_spotify_credentials, refresh_spotify_auth, request_spotify_access_token};
-
 mod spotify_utils;
-use spotify_utils::{get_current_track, get_recently_played, get_top_items};
+
+mod spotify;
+use spotify::{
+    callback, currently_playing_widget, spotify_authorise, spotify_homepage, spotify_recent,
+    top_artists, top_tracks,
+};
 
 mod riot_api;
 use riot_api::{LeagueV4, get_match_history, get_puuid_by_name_and_tag, get_ranked_stats_by_puuid};
-
-use crate::spotify_utils::Track;
 
 #[get("/")]
 fn index() -> Template {
@@ -57,7 +55,7 @@ fn experience() -> Template {
 fn projects() -> Template {
     let client = Client::new();
     let response = client
-        .get("https://raw.githubusercontent.com/usmaanwahab/usmaanwahab-co-uk/refs/heads/main/deploy.sh")
+        .get("https://raw.githubusercontent.com/usmaanwahab/usmaanwahab-co-uk/refs/heads/main/deploy.s")
         .send();
     let body = match response {
         Ok(r) => match r.text() {
@@ -67,159 +65,6 @@ fn projects() -> Template {
         Err(e) => format!("Request failed: {}", e),
     };
     Template::render("projects", context! {deploy_file_content: body})
-}
-
-#[get("/callback?<code>")]
-fn callback(code: &str) -> Result<String, String> {
-    match request_spotify_access_token(code) {
-        Ok(()) => Ok("Success".to_string()),
-        Err(e) => Err(e.to_string()),
-    }
-}
-
-#[get("/spotify/auth")]
-fn spotify_authorise() -> Result<Redirect, String> {
-    let spotify_credentials = match read_spotify_credentials() {
-        Ok(credentials) => credentials,
-        Err(e) => {
-            eprintln!("Failed to read spotify response: {}", e);
-            return Err(e.to_string());
-        }
-    };
-
-    let params = [
-        ("response_type", "code"),
-        ("client_id", spotify_credentials.client_id.as_str()),
-        (
-            "scope",
-            "user-read-currently-playing user-top-read user-read-recently-played",
-        ),
-        ("redirect_uri", "https://usmaanwahab.co.uk/callback"),
-    ];
-
-    let url = Url::parse_with_params("https://accounts.spotify.com/authorize", &params)
-        .unwrap()
-        .to_string();
-    Ok(Redirect::to(url))
-}
-
-#[get("/spotify/currently-playing")]
-fn currently_playing_widget() -> Result<Template, RawHtml<String>> {
-    match refresh_spotify_auth() {
-        Ok(()) => (),
-        Err(e) => eprintln!("Error: {}", e.to_string()),
-    };
-    let current_track_data = match get_current_track() {
-        Ok(body) => body,
-        Err(e) => {
-            eprintln!("Fetching current track failed: {}", e);
-            return Err(RawHtml("Fetching current track failed".to_string()));
-        }
-    };
-
-    let track_name = current_track_data["item"]["name"]
-        .as_str()
-        .unwrap_or("Nothing playing...");
-    let progress_ms = current_track_data["progress_ms"].as_i64().unwrap_or(-1);
-    let duration_ms = current_track_data["item"]["duration_ms"]
-        .as_i64()
-        .unwrap_or(-1);
-    let image_url = current_track_data["item"]["album"]["images"][0]["url"]
-        .as_str()
-        .unwrap_or("/static/pause.jpg");
-    let artist_name = current_track_data["item"]["album"]["artists"][0]["name"]
-        .as_str()
-        .unwrap_or("");
-
-    Ok(Template::render(
-        "audio-player",
-        context! {
-            track_name: track_name,
-            progress_ms: progress_ms,
-            duration_ms: duration_ms,
-            image_url: image_url,
-            artist_name: artist_name,
-        },
-    ))
-}
-
-#[get("/spotify/top/tracks/<term>?<limit>&<offset>")]
-fn top_tracks(
-    term: String,
-    limit: Option<u16>,
-    offset: Option<u16>,
-) -> Result<Template, RawHtml<String>> {
-    let term = match term.as_str() {
-        "short_term" => term,
-        "medium_term" => term,
-        "long_term" => term,
-        _ => return Err(RawHtml("Term is not valid.".to_string())),
-    };
-
-    let limit = limit.unwrap_or(10);
-    let offset = offset.unwrap_or(0);
-
-    let top_tracks = match get_top_items("tracks", &term, limit, offset) {
-        Ok(body) => body,
-        Err(e) => {
-            eprintln!("Error - could not fetch top tracks: {}", e);
-            return Err(RawHtml("Error - could not fetch top tracks".to_string()));
-        }
-    };
-
-    Ok(Template::render(
-        "top-tracks",
-        context! {
-            data: top_tracks
-        },
-    ))
-}
-
-#[get("/spotify/top/artists/<term>?<limit>&<offset>")]
-fn top_artists(
-    term: String,
-    limit: Option<u16>,
-    offset: Option<u16>,
-) -> Result<Template, RawHtml<String>> {
-    let term = match term.as_str() {
-        "short_term" => term,
-        "medium_term" => term,
-        "long_term" => term,
-        _ => return Err(RawHtml("Term is not valid.".to_string())),
-    };
-
-    let limit = limit.unwrap_or(10);
-    let offset = offset.unwrap_or(0);
-
-    let top_tracks = match get_top_items("artists", &term, limit, offset) {
-        Ok(body) => body,
-        Err(e) => {
-            eprintln!("Error - could not fetch top tracks: {}", e);
-            return Err(RawHtml("Error - could not fetch top tracks".to_string()));
-        }
-    };
-
-    Ok(Template::render(
-        "top-artists",
-        context! {
-            data: top_tracks
-        },
-    ))
-}
-
-#[get("/spotify/recent")]
-fn spotify_recent() -> Result<Template, String> {
-    let tracks: Vec<Track> = get_recently_played().map_err(|e| e.to_string())?;
-
-    Ok(Template::render(
-        "recently-played",
-        context! {tracks: tracks},
-    ))
-}
-
-#[get("/spotify")]
-fn spotify() -> Template {
-    Template::render("spotify", context! {})
 }
 
 #[get("/league")]
@@ -274,15 +119,20 @@ fn rocket() -> Rocket<Build> {
                 education,
                 experience,
                 projects,
+                league,
+                match_history,
+            ],
+        )
+        .mount(
+            "/spotify",
+            routes![
                 spotify_authorise,
                 callback,
                 currently_playing_widget,
-                top_artists,
                 top_tracks,
-                spotify,
-                league,
-                match_history,
-                spotify_recent
+                top_artists,
+                spotify_recent,
+                spotify_homepage
             ],
         )
         .attach(Template::fairing())
