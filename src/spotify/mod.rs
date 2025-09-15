@@ -75,7 +75,7 @@ pub fn currently_playing_widget() -> Result<Template, RawHtml<String>> {
         .unwrap_or("");
 
     Ok(Template::render(
-        "audio-player",
+        "cuyrrently-playing",
         context! {
             track_name: track_name,
             progress_ms: progress_ms,
