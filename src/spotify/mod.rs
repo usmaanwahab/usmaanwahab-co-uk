@@ -9,7 +9,7 @@ use url::Url;
 
 #[get("/")]
 pub fn spotify_homepage() -> Template {
-    Template::render("spotify", context! {})
+    Template::render("spotify/spotify", context! {})
 }
 
 #[get("/auth")]
@@ -75,7 +75,7 @@ pub fn currently_playing_widget() -> Result<Template, RawHtml<String>> {
         .unwrap_or("");
 
     Ok(Template::render(
-        "cuyrrently-playing",
+        "spotify/currently-playing",
         context! {
             track_name: track_name,
             progress_ms: progress_ms,
@@ -111,7 +111,7 @@ pub fn top_tracks(
     };
 
     Ok(Template::render(
-        "top-tracks",
+        "spotify/top-tracks",
         context! {
             data: top_tracks
         },
@@ -143,7 +143,7 @@ pub fn top_artists(
     };
 
     Ok(Template::render(
-        "top-artists",
+        "spotify/top-artists",
         context! {
             data: top_tracks
         },
@@ -155,7 +155,7 @@ pub fn spotify_recent() -> Result<Template, String> {
     let tracks: Vec<Track> = get_recently_played().map_err(|e| e.to_string())?;
 
     Ok(Template::render(
-        "recently-played",
+        "spotify/recently-played",
         context! {tracks: tracks},
     ))
 }

@@ -1,32 +1,16 @@
-{% block content %}
-<div class="d-flex justify-content-center">
-<div id="artist-carousel" class="carousel" data-bs-ride="carousel" style="width: 300px;">
-<h4> Top Artists </h4>
-<div class="carousel-inner">
-
-{% for artist in data.items %}
-<div class="carousel-item {% if loop.index == 1 %} active {% endif %}" style="width: 300px;">
-  <a href={{ artist.external_urls.spotify }} class="text-decoration-none text-reset" target="_blank">
-  <div class="card p-3 justify-content-center align-items-center text-center">
-    <img src="{{ artist.images.0.url }}" width="160" height="160" style="object-fit: cover">
-    <div class="card-body">
-      <h6 class="badge bg-primary m-2 p-2 rounded-circle">{{ loop.index }}<h6>
-      <p>{{ artist.name }}</p>
-      <p> </p>
-    </div>
-  </div>
-  </a>
+<div class="container mx-auto">
+  <h4 class="mb-3">Top Artists</h4>
+  <ul class="list-group">
+    {% for artist in data.items %}
+      <li class="list-group-item d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; margin-right:10px;">
+          <div>
+            <span class="fw-bold">{{ artist.name }}</span>
+          </div>
+        </div>
+        <a href="{{ artist.external_urls.spotify }}" target="_blank" class="btn btn-sm btn-primary">Listen</a>
+      </li>
+    {% endfor %}
+  </ul>
 </div>
-{% endfor %}
-</div>
-<button class="carousel-control-prev" type="button" data-bs-target="#artist-carousel" data-bs-slide="prev">
-  <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
-  <span class="visually-hidden">Previous</span>
-</button>
-<button class="carousel-control-next" type="button" data-bs-target="#artist-carousel" data-bs-slide="next">
-  <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
-  <span class="visually-hidden">Next</span>
-</button>
-</div>
-</div>
-{% endblock content %}

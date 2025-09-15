@@ -89,7 +89,7 @@ fn league() -> Result<Template, String> {
     let win_percent = (data.wins as f64 / total as f64) * 100.0;
 
     Ok(Template::render(
-        "league",
+        "riot/league",
         context! {data: data, win_percent: win_percent, loss_percent: loss_percent},
     ))
 }
@@ -100,7 +100,7 @@ fn match_history() -> Result<Template, String> {
     let match_history = get_match_history(&acc_v1.puuid).map_err(|e| e.to_string())?;
 
     Ok(Template::render(
-        "league-match-history",
+        "riot/match-history",
         context! {matches: match_history, puuid: acc_v1.puuid},
     ))
 }

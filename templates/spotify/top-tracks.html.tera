@@ -1,33 +1,17 @@
-{% block content %}
-<div class="d-flex justify-content-center">
-<div id="track-carousel" class="carousel" data-bs-ride="carousel" style="width: 300px;">
-<h4> Top Tracks </h4>
-<div class="carousel-inner">
-
-{% for track in data.items %}
-<div class="carousel-item {% if loop.index == 1 %} active {% endif %}" style="width: 300px;">
-  <a href={{ track.external_urls.spotify }} class="text-decoration-none text-reset" target="_blank">
-  <div class="card p-3 justify-content-center align-items-center text-center">
-    <img src="{{ track.album.images.0.url }}" width="160" height="160">
-    <div class="card-body">
-      <h6 class="badge bg-primary m-2 p-2 rounded-circle">{{ loop.index }}<h6>
-      <p>{{ track.name }}</p>
-      <p class="small text-muted">{{ track.artists.0.name }}</p>
-    </div>
-  </div>
-  </a>
+<div class="container mx-auto">
+  <h4 class="mb-3">Top Tracks</h4>
+  <ul class="list-group">
+    {% for track in data.items %}
+      <li class="list-group-item d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <img src="{{ track.album.images.0.url }}" alt="{{ track.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; margin-right:10px;">
+          <div>
+            <span class="fw-bold">{{ track.name }}</span>
+            <small class="text-muted">{{ track.artists.0.name }}</small>
+          </div>
+        </div>
+        <a href="{{ track.external_urls.spotify }}" target="_blank" class="btn btn-sm btn-primary">Listen</a>
+      </li>
+    {% endfor %}
+  </ul>
 </div>
-{% endfor %}
-
-</div>
-<button class="carousel-control-prev" type="button" data-bs-target="#track-carousel" data-bs-slide="prev">
-  <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(1);"></span>
-  <span class="visually-hidden">Previous</span>
-</button>
-<button class="carousel-control-next" type="button" data-bs-target="#track-carousel" data-bs-slide="next">
-  <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(1);"></span>
-  <span class="visually-hidden">Next</span>
-</button>
-</div>
-</div>
-{% endblock content %}

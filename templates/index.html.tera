@@ -10,7 +10,7 @@
         <p class="text-muted mb-0">Final-year Computer Science @ University of Glasgow</p>
       </div>
 
-      <div class="bg-white border rounded-3 p-4 p-md-5 shadow-sm" style="text-align: justify;">
+      <div class="bg-body border rounded-3 p-4 p-md-5 shadow-sm" style="text-align: justify;">
         <p class="mb-3">
           I’m finishing my degree in Computer Science at the University of Glasgow, where I work part-time as a
           Software Engineer at GUSS and as a Teaching Assistant. Outside of studying, I enjoy solving problems with
