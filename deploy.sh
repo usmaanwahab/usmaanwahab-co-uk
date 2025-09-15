@@ -16,6 +16,7 @@ cd ..
 if [[ $build == true ]]; then
   scp usmaanwahab-co-uk/target/release/usmaanwahab-co-uk webserver:/root/
 fi
+ssh -t webserver 'rm -r /root/templates /root/static'
 scp usmaanwahab-co-uk/.env webserver:/root/
 scp -r usmaanwahab-co-uk/templates/ webserver:/root/
 scp -r usmaanwahab-co-uk/static/ webserver:/root/
