@@ -8,17 +8,15 @@ use rocket::fs::FileServer;
 use rocket::{Build, Rocket};
 use rocket_dyn_templates::{Template, context};
 
-mod spotify_auth;
-mod spotify_utils;
+pub mod riot;
+pub mod spotify;
 
-mod spotify;
 use spotify::{
     callback, currently_playing_widget, spotify_authorise, spotify_homepage, spotify_recent,
     top_artists, top_tracks,
 };
 
-mod riot_api;
-use riot_api::{LeagueV4, get_match_history, get_puuid_by_name_and_tag, get_ranked_stats_by_puuid};
+use riot::{LeagueV4, get_match_history, get_puuid_by_name_and_tag, get_ranked_stats_by_puuid};
 
 #[get("/")]
 fn index() -> Template {
@@ -55,7 +53,7 @@ fn experience() -> Template {
 fn projects() -> Template {
     let client = Client::new();
     let response = client
-        .get("https://raw.githubusercontent.com/usmaanwahab/usmaanwahab-co-uk/refs/heads/main/deploy.s")
+        .get("https://raw.githubusercontent.com/usmaanwahab/usmaanwahab-co-uk/refs/heads/main/deploy.sh")
         .send();
     let body = match response {
         Ok(r) => match r.text() {

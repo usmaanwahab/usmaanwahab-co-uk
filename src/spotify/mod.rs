@@ -1,7 +1,7 @@
-use crate::spotify_auth::{
-    read_spotify_credentials, refresh_spotify_auth, request_spotify_access_token,
-};
-use crate::spotify_utils::{Track, get_current_track, get_recently_played, get_top_items};
+pub mod api;
+pub mod auth;
+use api::{Track, get_current_track, get_recently_played, get_top_items};
+use auth::{read_spotify_credentials, refresh_spotify_auth, request_spotify_access_token};
 use rocket::response::Redirect;
 use rocket::response::content::RawHtml;
 use rocket_dyn_templates::{Template, context};

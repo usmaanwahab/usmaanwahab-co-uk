@@ -1,4 +1,5 @@
-use crate::spotify_auth::authorised_spotify_client;
+use super::auth::authorised_spotify_client;
+
 use serde::Serialize;
 use serde_json;
 use std::collections::HashMap;
