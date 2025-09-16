@@ -2,13 +2,29 @@
 
 {% block content %}
 <div class="row text-center">
-  <div class="col-4 mx-auto" id="audio-player-container"></div>
+  <div class="col-4 mx-auto" id="audio-player-container">
+    <div class="m-5 text-center">
+      <div class="spinner-border" role="status" aria-hidden="true"></div>
+    </div>
+  </div>
 </div>
 <br>
 <div class="row text-center">
-  <div class="col-4" id="top-tracks"></div>
-  <div class="col-4" id="recently-played"></div>
-  <div class="col-4" id="top-artists"></div>
+  <div class="col-4" id="top-tracks">
+    <div class="m-5 text-center">
+      <div class="spinner-border" role="status" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="col-4" id="recently-played">
+    <div class="m-5 text-center">
+      <div class="spinner-border" role="status" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="col-4" id="top-artists">
+    <div class="m-5 text-center">
+      <div class="spinner-border" role="status" aria-hidden="true"></div>
+    </div>
+  </div>
 </div>
 
 
