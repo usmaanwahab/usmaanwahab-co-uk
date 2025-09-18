@@ -1,4 +1,4 @@
 /target
 *.lock
-*.json
+spotify_auth.json
 .env

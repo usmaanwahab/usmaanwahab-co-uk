@@ -1,20 +1,66 @@
+
 {% extends "base" %}
 
+{% block style %}
+<style>
+.timeline {
+  position: relative;
+  margin: 20px 0;
+  padding: 0;
+  border-left: 2px solid #0d6efd;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -10px;
+  top: 10px;
+  width: 20px;
+  height: 20px;
+  background: #0d6efd;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.timeline-content {
+  padding: 15px 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.timeline-item:hover .timeline-content {
+  transform: translateY(-3px);
+}
+
+</style>
+{% endblock style %}
+
 {% block content %}
-<div class="accordion" id="educationAccordion">
-  {% for subject in subjects %}
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse {{ loop.index }}">
-        {{ subject }}
-      </button>
-    </h2>
-    <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#educationAccordion">
-      <div class="accordion-body">
-      
-      </div>
+<div class="timeline col-6 mx-auto">
+  {% for course in courses %}
+  <div class="timeline-item">
+    <div class="timeline-marker"></div>
+    <div class="timeline-content">
+      <h5>{{ course.course_code }} - {{ course.course_name }}</h5>
+      <p>
+        Year: {{ course.year }}<br>
+        Grade: {% if course.grade == "" %} In progress {% else %} {{ course.grade }} {% endif %}<br>
+        <a href="https://www.gla.ac.uk/coursecatalogue/course/?code={{ course.course_code | replace(from=" ", to="") }}" target="_blank">
+          <i class="bi bi-link"></i> Specification
+        </a>
+      </p>
     </div>
   </div>
   {% endfor %}
 </div>
 {% endblock content %}
+

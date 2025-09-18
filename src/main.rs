@@ -1,12 +1,14 @@
 #[macro_use]
 extern crate rocket;
 
-use dotenv::dotenv;
+use std::fs;
 
+use dotenv::dotenv;
 use reqwest::blocking::Client;
 use rocket::fs::FileServer;
 use rocket::{Build, Rocket};
 use rocket_dyn_templates::{Template, context};
+use serde::{Deserialize, Serialize};
 
 pub mod riot;
 pub mod spotify;
@@ -18,6 +20,14 @@ use spotify::{
 
 use riot::{LeagueV4, get_match_history, get_puuid_by_name_and_tag, get_ranked_stats_by_puuid};
 
+#[derive(Deserialize, Serialize)]
+struct Course {
+    course_code: String,
+    course_name: String,
+    year: String,
+    grade: String,
+}
+
 #[get("/")]
 fn index() -> Template {
     Template::render("index", context! {})
@@ -25,23 +35,10 @@ fn index() -> Template {
 
 #[get("/education")]
 fn education() -> Template {
-    let subjects: [&str; 14] = [
-        "Advanced Systems Programming",
-        "Cyber Security Fundamentals",
-        "Software Engineering Release Practices",
-        "Functional Programming",
-        "Distributed and Parallel Technologies",
-        "Computer Architecture",
-        "Algorithmics 2",
-        "Programming Languages",
-        "Database Systems",
-        "Networked Systems",
-        "Operating Systems",
-        "Algorithmics 1",
-        "Data Fundamentals",
-        "Systems Programming",
-    ];
-    Template::render("education", context! {subjects: subjects})
+    let data = fs::read_to_string("courses.json").expect("Unable to read courses.json");
+    let mut courses: Vec<Course> = serde_json::from_str(&data).expect("Unable to parse JSON");
+    courses.reverse();
+    Template::render("education", context! { courses: courses })
 }
 
 #[get("/experience")]
