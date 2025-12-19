@@ -1,0 +1,31 @@
+<article class="mb-4 p-4 bg-body shadow-sm rounded">
+  <header class="mb-3">
+    <h2 class="fw-bold mb-1">usmaanwahab.co.uk</h2>
+    <p class="text-muted small">Published: Aug 2025</p>
+  </header>
+
+  <section class="mb-4">
+    <h4 class="fw-bold">Motivation</h4>
+    <p class="mt-2">
+      The initial motivation was to learn some Rust while also using it as a chance to finally create a sort of portfolio website.
+    </p>
+  </section>
+
+  <section class="mb-4">
+    <h4 class="fw-bold">Setup</h4>
+    <p class="mt-2">
+      The site uses <a href="https://rocket.rs"><i class="bi bi-rocket-takeoff-fill"></i> Rocket.rs</a> for the backend logic. Through Rocket.r, we can render templates using the 
+      <a href="https://github.com/Keats/tera"><i class="bi bi-github"></i> Tera </a> template engine. Tera allows us to include variables,
+      expressions, conditional rendering that happens dynamically on a per request basis. Tera can also enable us to break up our HTML into many modular templates.
+      
+      In addition, the UI is created using <a href="https://getbootstrap.com/"><i class="bi bi-bootstrap-fill"></i> Bootstrap 5</a> which comes with many pre-made componenets and a large online library of free to use componenets. This greatly simplifies
+      UI development. There is also a sprinkle of custom JavaScript and CSS spread about to get things just right.
+    </p>
+  </section>
+
+  <section>
+    <h5 class="fw-bold">Deployment</h5>
+    <p class="mt-2">This is a script that I use to deploy the server during testing, and for for extended deployment I use <code>nohup</code></p>
+    <pre class="p-3 rounded"><code>{{ deploy_file_content }}</code></pre>
+  </section>
+</article>

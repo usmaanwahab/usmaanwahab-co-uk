@@ -1,0 +1,16 @@
+<article class="mb-4 p-4 bg-body shadow-sm rounded">
+  <header class="mb-3">
+    <h2 class="fw-bold mb-1">toggl-sync</h2>
+    <p class="text-muted small">Published: Dec 2025</p>
+  </header>
+
+  <section class="mb-4">
+    <h4 class="fw-bold">Motivation</h4>
+    <p class="mt-2">
+      I want to be able to reference a single point of truth for both time tracking and planning, currently this is Google Calendar.
+      I use Toggl Track for real representative time spent on a task rather than planned or expected.
+      Therfore this script aims to sync all Toggl time entries onto a secondary/managed calendar on my personal Google Calendar.
+    </p>
+  </section>
+
+</article>
