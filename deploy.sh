@@ -18,6 +18,7 @@ if [[ $build == true ]]; then
 fi
 ssh -t webserver 'rm -r /root/templates /root/static'
 scp usmaanwahab-co-uk/.env webserver:/root/
+scp usmaanwahab-co-uk/courses.json webserver:/root/
 scp -r usmaanwahab-co-uk/templates/ webserver:/root/
 scp -r usmaanwahab-co-uk/static/ webserver:/root/
 ssh -t webserver 'sleep 1 && ./usmaanwahab-co-uk'
