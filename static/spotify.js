@@ -1,11 +1,11 @@
 function fetchTopArtists() {
-  fetch("/spotify/top/artists/long_term?limit=20&offset=0")
+  fetch("/spotify/top/artists/long_term?limit=10&offset=0")
     .then(r => r.text())
     .then(html => document.getElementById("top-artists").innerHTML = html)
 }
 
 function fetchTopTracks() {
-  fetch("/spotify/top/tracks/long_term?limit=20&offset=0")
+  fetch("/spotify/top/tracks/long_term?limit=10&offset=0")
     .then(r => r.text())
     .then(html => document.getElementById("top-tracks").innerHTML = html)
 }

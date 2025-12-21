@@ -12,20 +12,30 @@
   </section>
 
   <section class="mb-4">
-    <h4 class="fw-bold">Setup</h4>
+    <h4 class="fw-bold">Overview</h4>
     <p class="mt-2">
-      The site uses <a href="https://rocket.rs"><i class="bi bi-rocket-takeoff-fill"></i> Rocket.rs</a> for the backend logic. Through Rocket.r, we can render templates using the 
-      <a href="https://github.com/Keats/tera"><i class="bi bi-github"></i> Tera </a> template engine. Tera allows us to include variables,
-      expressions, conditional rendering that happens dynamically on a per request basis. Tera can also enable us to break up our HTML into many modular templates.
+      This application is written in Rust using the Rocket framework to respond to all requests. Rocket allows template rendering using Tera, which draws inspiration with from Django Tempalte Language and Jinja2.
+      This allows for a modular approach similar to components in React, so we can reusue many common blocks of HTML.
       
-      In addition, the UI is created using <a href="https://getbootstrap.com/"><i class="bi bi-bootstrap-fill"></i> Bootstrap 5</a> which comes with many pre-made componenets and a large online library of free to use componenets. This greatly simplifies
-      UI development. There is also a sprinkle of custom JavaScript and CSS spread about to get things just right.
+      In addition, the UI is created using Bootstrap 5 which comes with many pre-made componenets and a large online library of free to use componenets. This greatly simplifies
+      UI development.
     </p>
   </section>
 
-  <section>
-    <h5 class="fw-bold">Deployment</h5>
-    <p class="mt-2">This is a script that I use to deploy the server during testing, and for for extended deployment I use <code>nohup</code></p>
-    <pre class="p-3 rounded"><code>{{ deploy_file_content }}</code></pre>
+  <section class="mb-4">
+    <h4 class="fw-bold">Spotify</h4>
+    <p class="mt-2">
+      I listen to a ton of music upwards of 150k minutes per year, so it made since to add a spotify page. 
+      The application makes several requests to Spotify APIs to retrieve my currently playing song, and also my top tracks, top artists and recently played.  
+    </p>
+  </section>
+
+  <section class="mb-4">
+    <h4 class="fw-bold">League</h4>
+    <p class="mt-2">
+     The ultimate time sink, I also play a lot of League of Legends (outside of semester time), 
+     so I my application makes requests to both official Riot APIs and community asset APIs to retrieve splash cards and (weird looking) rank emblems.
+     You can also click each player to see a they statistics that 
+    </p>
   </section>
 </article>

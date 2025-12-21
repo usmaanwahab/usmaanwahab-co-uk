@@ -90,7 +90,7 @@ pub fn get_match_history(
 ) -> Result<Vec<serde_json::Value>, Box<dyn std::error::Error>> {
     let riot_config = read_riot_api_key()?;
     let url: String = format!(
-        "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids",
+        "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?count=10",
         puuid
     );
     let mut headers = HeaderMap::new();

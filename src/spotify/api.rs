@@ -57,7 +57,7 @@ pub fn get_top_items(
 }
 
 pub fn get_recently_played() -> Result<Vec<Track>, Box<dyn std::error::Error>> {
-    let url = "https://api.spotify.com/v1/me/player/recently-played";
+    let url = "https://api.spotify.com/v1/me/player/recently-played?limit=10";
     let response = authorised_spotify_client(reqwest::Method::GET, url)?.send()?;
     // TODO is .send().error_for_status()?; worth?  should save manual error handling
 
